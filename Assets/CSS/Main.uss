@@ -1,0 +1,39 @@
+#BackgroundImage {
+}
+
+.mnuButton {
+    -unity-font: url('project://database/Assets/Thirdparty/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans');
+    font-size: 30px;
+    -unity-font-style: bold;
+    background-color: rgba(176, 149, 41, 0.55);
+    border-top-left-radius: 27px;
+    border-bottom-left-radius: 27px;
+    border-top-right-radius: 27px;
+    border-bottom-right-radius: 27px;
+    width: 90%;
+    padding-left: -6px;
+    padding-right: -6px;
+    padding-top: -6px;
+    padding-bottom: -6px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.groupButton {
+    width: 50%;
+    height: 100%;
+    align-items: center;
+}
+
+.Checkbox {
+    width: 90%;
+    height: auto;
+    font-size: 30px;
+    -unity-font-style: bold;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
