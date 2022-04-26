@@ -7,26 +7,31 @@ using UnityEngine.UIElements;
 
 public class PanelManager : MonoBehaviour
 {
-    [SerializeField] private UIDocument MainMenu;
-    [SerializeField] private UIDocument SettingsMenu;
+    [SerializeField] private UIDocument HauptMenu;
+    [SerializeField] private UIDocument EinstellungMenu;
+    [SerializeField] private UIDocument TastaturMenu;
 
     private VisualElement rootMainMenu;
     private VisualElement rootSettingsMenu;
+    private VisualElement rootTutorialMenu;
 
     private void OnEnable()
     {
-        rootMainMenu = MainMenu.rootVisualElement;
-        rootSettingsMenu = SettingsMenu.rootVisualElement;
+        rootMainMenu = HauptMenu.rootVisualElement;
+        rootSettingsMenu = EinstellungMenu.rootVisualElement;
+        rootTutorialMenu = TastaturMenu.rootVisualElement;
 
         var startButton = rootMainMenu.Q<Button>("btnStart");
-        var tutorialButton = rootMainMenu.Q<Button>("btnTutorial");
+        var tastaturButton = rootMainMenu.Q<Button>("btnTastatur");
         var settingsButton = rootMainMenu.Q<Button>("btnSettings");
         var quitButton = rootMainMenu.Q<Button>("btnQuit");
 
         var checkTon = rootSettingsMenu.Q<Toggle>("checkAudio");
         var checkGost = rootSettingsMenu.Q<Toggle>("checkGhost");
         var saveButton = rootSettingsMenu.Q<Button>("btnSave");
-        var returnButton = rootSettingsMenu.Q<Button>("btnReturn");
+        var returnFromSettingButton = rootSettingsMenu.Q<Button>("btnReturn");
+
+        var returnFromTutorialButton = rootTutorialMenu.Q<Button>("btnReturn");
 
         if (startButton != null)
         {
@@ -37,12 +42,12 @@ public class PanelManager : MonoBehaviour
             };
         }
 
-        if (tutorialButton != null)
+        if (tastaturButton != null)
         {
-            tutorialButton.clickable.clicked += () =>
+            tastaturButton.clickable.clicked += () =>
             {
-                Debug.Log("TutorialButton wurde gedrückt");
-                mainToTutorial();
+                Debug.Log("TastaturButton wurde gedrückt");
+                mainToTastatur();
             };
         }
 
@@ -69,14 +74,27 @@ public class PanelManager : MonoBehaviour
             saveButton.clickable.clicked += () => { Debug.Log("saveButton wurde gedrückt"); };
         }
 
-        if (returnButton != null)
+        if (returnFromSettingButton != null)
         {
-            returnButton.clickable.clicked += () =>
+            returnFromSettingButton.clickable.clicked += () =>
             {
-                Debug.Log("returnButton wurde gedrückt");
+                Debug.Log("ReturnFromSettingButton wurde gedrückt");
                 settingToMain();
             };
         }
+
+        if (returnFromTutorialButton != null)
+        {
+            returnFromTutorialButton.clickable.clicked += () =>
+            {
+                Debug.Log("ReturnFromTutorialButton wurde gedrückt");
+                tutorialToMain();
+            };
+        }
+
+        checkTon?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
+
+        checkGost?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
 
         showMain();
     }
@@ -85,30 +103,42 @@ public class PanelManager : MonoBehaviour
     {
         rootMainMenu.style.display = DisplayStyle.None;
         rootSettingsMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.None;
     }
 
     private void showMain()
     {
         rootMainMenu.style.display = DisplayStyle.Flex;
         rootSettingsMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.None;
     }
 
     private void mainToSettings()
     {
         rootMainMenu.style.display = DisplayStyle.None;
         rootSettingsMenu.style.display = DisplayStyle.Flex;
+        rootTutorialMenu.style.display = DisplayStyle.None;
     }
 
-    private void mainToTutorial()
+    private void mainToTastatur()
     {
         rootMainMenu.style.display = DisplayStyle.None;
         rootSettingsMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.Flex;
     }
 
     private void settingToMain()
     {
         rootSettingsMenu.style.display = DisplayStyle.None;
         rootMainMenu.style.display = DisplayStyle.Flex;
+        rootTutorialMenu.style.display = DisplayStyle.None;
+    }
+
+    private void tutorialToMain()
+    {
+        rootSettingsMenu.style.display = DisplayStyle.None;
+        rootMainMenu.style.display = DisplayStyle.Flex;
+        rootTutorialMenu.style.display = DisplayStyle.None;
     }
 
     private void quitApplication()
