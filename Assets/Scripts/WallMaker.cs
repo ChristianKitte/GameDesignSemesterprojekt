@@ -39,7 +39,14 @@ public class WallMaker : MonoBehaviour
 
             newWallObject.transform.Rotate(0f, newDirectionAsEuler, 0f);
             newWallObject.transform.position = new Vector3(203, 0.5f, 191.4f);
+
             newWallObject.gameObject.GetComponent<MoveForward>().SetMoveSpeed(newMoveSpeed);
+
+            newWallObject.gameObject.GetComponent<MoveForward>().SetRestrictionArea(
+                wallDimension.leftDestroyXPosition,
+                wallDimension.topDestroyZPosition,
+                wallDimension.rightDestroyXPosition,
+                wallDimension.bottomDestroyZPosition);
         }
     }
 

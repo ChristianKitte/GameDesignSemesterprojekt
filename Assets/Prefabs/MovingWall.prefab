@@ -358,8 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 5
-  MoveDirection: 2
-  left: 0
-  right: 0
-  up: 0
-  down: 0
+  leftDestroyXPosition: 130
+  topDestroyZPosition: 330
+  rightDestroyXPosition: 280
+  bottomDestroyZPosition: 101

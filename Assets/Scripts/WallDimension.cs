@@ -8,6 +8,26 @@ using UnityEngine;
 public record WallDimension()
 {
     /// <summary>
+    /// Die linke Position, ab der ein WallObject sich zerstört
+    /// </summary>
+    public float leftDestroyXPosition { get; set; }
+
+    /// <summary>
+    /// Die obere (forward) Position, ab der ein WallObject sich zerstört
+    /// </summary>
+    public float topDestroyZPosition { get; set; }
+
+    /// <summary>
+    /// Die rechte Position, ab der ein WallObject sich zerstört
+    /// </summary>
+    public float rightDestroyXPosition { get; set; }
+
+    /// <summary>
+    /// Die untere (backward) Position, ab der ein WallObject sich zerstört
+    /// </summary>
+    public float bottomDestroyZPosition { get; set; }
+
+    /// <summary>
     /// Die minimale Geschwindigkeit
     /// </summary>
     public float MinMoveSpeed { get; set; }

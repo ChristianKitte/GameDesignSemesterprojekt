@@ -15,6 +15,18 @@ public class GameMaster : MonoBehaviour
 {
     #region Einstellungen und Variablen
 
+    [Tooltip("Die linke Position, ab der ein WallObject sich zerstört")] [SerializeField]
+    private float leftDestroyXPosition = 130f;
+
+    [Tooltip("Die obere (forward) Position, ab der ein WallObject sich zerstört")] [SerializeField]
+    private float topDestroyZPosition = 330f;
+
+    [Tooltip("Die rechte Position, ab der ein WallObject sich zerstört")] [SerializeField]
+    private float rightDestroyXPosition = 280f;
+
+    [Tooltip("Die untere (backward) Position, ab der ein WallObject sich zerstört")] [SerializeField]
+    private float bottomDestroyZPosition = 101f;
+
     [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
     private int TimePerRoundInSeconds;
 
@@ -131,7 +143,7 @@ public class GameMaster : MonoBehaviour
 
     /// <summary>
     /// Erzeugt auf Basis der anfänglichen Vorgaben und des aktuellen Levels einen neuen Record, der die minimalen
-    /// und maximalen Abnessungen für die nächste zu generierende Wand enthält.
+    /// und maximalen Abnessungen für die nächste zu generierende Wand enthält sowie deren räumliche Begrenzung.
     /// </summary>
     /// <param name="currentLevel">Das aktuelle Level</param>
     /// <returns>Die zur Generierung zu verwendenen Rahmenangaben für die Wandabmessungen als WallDimension</returns>
@@ -139,6 +151,10 @@ public class GameMaster : MonoBehaviour
     {
         var newWallDimension = new WallDimension()
         {
+            leftDestroyXPosition = leftDestroyXPosition,
+            topDestroyZPosition = topDestroyZPosition,
+            rightDestroyXPosition = rightDestroyXPosition,
+            bottomDestroyZPosition = bottomDestroyZPosition,
             MinMoveSpeed = StartMinMoveSpeed,
             MaxMoveSpeed = StartMaxMoveSpeed,
             MinHeight = StartMinHeight,
