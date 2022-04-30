@@ -15,6 +15,30 @@ public class GameMaster : MonoBehaviour
 {
     #region Einstellungen und Variablen
 
+    [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
+    private int TimePerRoundInSeconds;
+
+    [Tooltip("Die zu verwendende WallFactory")] [SerializeField]
+    private GameObject WallFactory;
+
+    [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
+    private GameObject ProviderFactory;
+
+    /// <summary>
+    /// Aktuell verwendeter Intervall für das Generieren einer Wand
+    /// </summary>
+    private int curWallIntervallInSeconds;
+
+    private int playedSecondsSinceStart;
+    private int remainingSecondsSinceStart;
+    private string currentTimeText;
+
+    private int currentLevel = 1;
+
+    #endregion
+
+    #region Einstellungen für WallDimension
+
     [Tooltip("Die linke Position, ab der ein WallObject startet")] [SerializeField]
     private float leftStartXPosition = 203f;
 
@@ -41,12 +65,6 @@ public class GameMaster : MonoBehaviour
 
     [Tooltip("Die untere (backward) Position, ab der ein WallObject sich zerstört")] [SerializeField]
     private float bottomDestroyZPosition = 101f;
-
-    [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
-    private int TimePerRoundInSeconds;
-
-    [Tooltip("Die zu verwendende WallFactory")] [SerializeField]
-    private GameObject WallFactory;
 
     [Tooltip("Referenzwert in Level1 - Minimale Wartezeit zwischen neuen Mauern in Sekunden")] [SerializeField]
     private int MinWallIntervallInSeconds;
@@ -81,16 +99,57 @@ public class GameMaster : MonoBehaviour
     [SerializeField]
     private int StartMaxLengthUnit = 40;
 
-    /// <summary>
-    /// Aktuell verwendeter Intervall für das Generieren einer Wand
-    /// </summary>
-    private int curWallIntervallInSeconds;
+    #endregion
 
-    private int playedSecondsSinceStart;
-    private int remainingSecondsSinceStart;
-    private string currentTimeText;
+    #region Einstellungen für ProviderDimension
 
-    private int currentLevel = 1;
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an LiveProvider")] [SerializeField]
+    private int MinCountLiveProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an LiveProvider")] [SerializeField]
+    private int MaxCountLiveProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an GhostProtectionProvider")] [SerializeField]
+    private int MinCountGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an GhostProtectionProvider")] [SerializeField]
+    private int MaxCountGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an GoThroughProvider")] [SerializeField]
+    private int MinCountGoThroughProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an GoThroughProvider")] [SerializeField]
+    private int MaxCountGoThroughProvider;
+
+    [Tooltip("Die linke Position, ab der ein Provider plaziert werden darf")] [SerializeField]
+    private float leftStartXPositionProvider;
+
+    [Tooltip("Die obere (forward) Position, ab der ein Provider plaziert werden darf")] [SerializeField]
+    private float topStartZPositionProvider;
+
+    [Tooltip("Die rechte Position, ab der ein Provider plaziert werden darf")] [SerializeField]
+    private float rightStartXPositionProvider;
+
+    [Tooltip("Die untere (backward) Position, ab der ein Provider plaziert werden darf")] [SerializeField]
+    private float bottomStartZPositionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für LiveProvider")] [SerializeField]
+    private int MinValueLiveProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für LiveProvider")] [SerializeField]
+    private int MaxValueLiveProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für GhostProtectionProvider")] [SerializeField]
+    private int MinValueGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für GhostProtectionProvider")] [SerializeField]
+    private int MaxValueGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für GoThroughProvider")] [SerializeField]
+    private int MinValueGoThroughProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für GoThroughProvider")] [SerializeField]
+    private int MaxValueGoThroughProvider;
 
     #endregion
 
@@ -123,17 +182,8 @@ public class GameMaster : MonoBehaviour
     {
         playedSecondsSinceStart++;
         remainingSecondsSinceStart--;
-        /*
-        curWallIntervallInSeconds--;
 
-        // Eine neue Wand erstellen und die Zeit bis zur nächsten Wand zufällig festlegen, sofern
-        // curWallIntervallInSeconds kleiner 0 ist.
-        if (curWallIntervallInSeconds < 0)
-        {
-            WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
-            curWallIntervallInSeconds = getNewWallIntervall(currentLevel);
-        }
-        */
+        ProviderFactory.GetComponent<ProviderMaker>().CreateProvider(getNewProviderDimension(currentLevel));
 
         int curWallIntervall = getNewWallIntervall(currentLevel);
         for (int i = 0; i < curWallIntervall; i++)
@@ -142,7 +192,7 @@ public class GameMaster : MonoBehaviour
         }
 
         // Wird betreten, wenn die aktuelle Zeit remainingSecondsSinceStart den Wert 0 erreicht hat. Im
-        // Spielkontext ist dies das Ende der zur verfügung stehenden Zeit einer Runde
+        // Spielkontext ist dies das Ende der zur Verfügung stehenden Zeit einer Runde
         if (remainingSecondsSinceStart < 0)
         {
             EventManager.Instance().SendResetTimer();
@@ -152,8 +202,6 @@ public class GameMaster : MonoBehaviour
 
         TimeSpan restzeit = TimeSpan.FromSeconds(remainingSecondsSinceStart);
         currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
-
-        //Debug.Log($"Verbleibende Zeit {remainingSecondsSinceStart}");
     }
 
     /// <summary>
@@ -197,5 +245,36 @@ public class GameMaster : MonoBehaviour
         };
 
         return newWallDimension;
+    }
+
+    /// <summary>
+    /// Erzeugt auf Basis der anfänglichen Vorgaben und des aktuellen Levels einen neuen Record, der die minimalen
+    /// und maximalen Plazierung für die im Level befindlichen Provider sowie deren Wertebereich enthält .
+    /// </summary>
+    /// <param name="currentLevel">Das aktuelle Level</param>
+    /// <returns>Die zur Generierung zu verwendenen Rahmenangaben für die Provider als ProviderDimension</returns>
+    private ProviderDimension getNewProviderDimension(int currentLevel)
+    {
+        var newProviderDimension = new ProviderDimension()
+        {
+            MinCountLiveProvider = MinCountLiveProvider,
+            MaxCountLiveProvider = MaxCountLiveProvider,
+            MinCountGhostProtectionProvider = MinCountGhostProtectionProvider,
+            MaxCountGhostProtectionProvider = MaxCountGhostProtectionProvider,
+            MinCountGoThroughProvider = MinCountGoThroughProvider,
+            MaxCountGoThroughProvider = MaxCountGoThroughProvider,
+            leftStartXPositionProvider = leftStartXPositionProvider,
+            topStartZPositionProvider = topStartZPositionProvider,
+            rightStartXPositionProvider = rightStartXPositionProvider,
+            bottomStartZPositionProvider = bottomStartZPositionProvider,
+            MinValueLiveProvider = MinValueLiveProvider,
+            MaxValueLiveProvider = MaxValueLiveProvider,
+            MinValueGhostProtectionProvider = MinValueGhostProtectionProvider,
+            MaxValueGhostProtectionProvider = MaxValueGhostProtectionProvider,
+            MinValueGoThroughProvider = MinValueGoThroughProvider,
+            MaxValueGoThroughProvider = MaxValueGoThroughProvider
+        };
+
+        return newProviderDimension;
     }
 }

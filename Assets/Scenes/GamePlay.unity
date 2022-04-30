@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &72070368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 72070369}
+  - component: {fileID: 72070370}
+  m_Layer: 0
+  m_Name: ProviderFactory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &72070369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72070368}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1277540216}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &72070370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72070368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de6fc51c91fb7b044937912de34e9943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LiveProvider: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
+  GoThroughProvider: {fileID: 3066338822720895660, guid: 41f7342eb157bad4e8253ca23d8f7212, type: 3}
+  GhostProtectionProvider: {fileID: 3066338822720895660, guid: b5ebd67977b03a7409f07e808282d545, type: 3}
 --- !u!1 &242455627
 GameObject:
   m_ObjectHideFlags: 0
@@ -1554,6 +1601,7 @@ Transform:
   - {fileID: 849071384}
   - {fileID: 472565019}
   - {fileID: 1317794040}
+  - {fileID: 72070369}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2496,7 +2544,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892387452}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 196, y: 0.5, z: 276}
+  m_LocalPosition: {x: 192, y: 0.5, z: 243.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2744,6 +2792,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d2e8194854416842a8ee079faebfca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimePerRoundInSeconds: 5
+  WallFactory: {fileID: 1317794039}
+  ProviderFactory: {fileID: 72070368}
   leftStartXPosition: 172
   topStartZPosition: 246
   rightStartXPosition: 226
@@ -2753,8 +2804,6 @@ MonoBehaviour:
   topDestroyZPosition: 280
   rightDestroyXPosition: 264
   bottomDestroyZPosition: 140
-  TimePerRoundInSeconds: 5
-  WallFactory: {fileID: 1317794039}
   MinWallIntervallInSeconds: 2
   MaxWallIntervallInSeconds: 6
   StartMinMoveSpeed: 0.5
@@ -2765,6 +2814,22 @@ MonoBehaviour:
   StartMaxThickness: 1.5
   StartMinLengthUnits: 2
   StartMaxLengthUnit: 7
+  MinCountLiveProvider: 40
+  MaxCountLiveProvider: 40
+  MinCountGhostProtectionProvider: 20
+  MaxCountGhostProtectionProvider: 20
+  MinCountGoThroughProvider: 5
+  MaxCountGoThroughProvider: 5
+  leftStartXPositionProvider: 176
+  topStartZPositionProvider: 168
+  rightStartXPositionProvider: 222
+  bottomStartZPositionProvider: 176
+  MinValueLiveProvider: 5
+  MaxValueLiveProvider: 20
+  MinValueGhostProtectionProvider: 3
+  MaxValueGhostProtectionProvider: 6
+  MinValueGoThroughProvider: 1
+  MaxValueGoThroughProvider: 2
 --- !u!1001 &4464986411858775842
 PrefabInstance:
   m_ObjectHideFlags: 0
