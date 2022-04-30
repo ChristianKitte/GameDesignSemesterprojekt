@@ -5,6 +5,9 @@ using System.Security.Cryptography;
 using Game.Enumerations;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using UnityEngine.ProBuilder;
+using UnityEngine.ProBuilder.Shapes;
 
 /// <summary>
 /// Die WallMaker erzeugt Wände, welche sich in zufälliger Richtung bewegen. Die Ausmaße der Wände und deren
@@ -29,53 +32,170 @@ public class WallMaker : MonoBehaviour
     {
         if (wallObject != null)
         {
-            float newDirectionAsEuler = GetDirections();
+            Random.InitState(DateTime.Now.Second);
+            float newMoveSpeed = Random.Range(
+                wallDimension.MinMoveSpeed,
+                wallDimension.MaxMoveSpeed);
 
-            float newMoveSpeed = (float)RandomNumberGenerator.GetInt32(
-                (int)wallDimension.MinMoveSpeed,
-                (int)wallDimension.MaxMoveSpeed + 1);
+            Random.InitState(DateTime.Now.Second);
+            float newWallLength = Random.Range(
+                wallDimension.MinLengthUnit,
+                wallDimension.MaxLengthUnit);
 
-            var newWallObject = Instantiate(wallObject);
+            //var newWallObject = Instantiate(wallObject);
 
-            newWallObject.transform.Rotate(0f, newDirectionAsEuler, 0f);
-            newWallObject.transform.position = new Vector3(203, 0.5f, 191.4f);
+            List<GameObject> newWallObjects = new List<GameObject>();
 
-            newWallObject.gameObject.GetComponent<MoveForward>().SetMoveSpeed(newMoveSpeed);
+            for (int i = 0; i < newWallLength + 1; i++)
+            {
+                newWallObjects.Add(Instantiate(wallObject));
+            }
 
-            newWallObject.gameObject.GetComponent<MoveForward>().SetRestrictionArea(
-                wallDimension.leftDestroyXPosition,
-                wallDimension.topDestroyZPosition,
-                wallDimension.rightDestroyXPosition,
-                wallDimension.bottomDestroyZPosition);
+            //GetDirectionAndStartpoint(newWallObject, wallDimension);
+
+            GetDirectionAndStartpoint(newWallObjects, wallDimension);
+
+            foreach (var newWallObject in newWallObjects)
+            {
+                MoveForward moveForwardScript = newWallObject.gameObject.GetComponent<MoveForward>();
+
+                moveForwardScript.SetMoveSpeed(newMoveSpeed);
+
+                moveForwardScript.SetRestrictionArea(
+                    wallDimension.leftDestroyXPosition,
+                    wallDimension.topDestroyZPosition,
+                    wallDimension.rightDestroyXPosition,
+                    wallDimension.bottomDestroyZPosition);
+            }
         }
     }
 
+    /*
     /// <summary>
-    /// Gibt zufallsbasiert einen Eulerwinkel zurück, der einen der in Directions existierenden
-    /// Enumerationen entspricht (0, 90, 180, 270 Grad).
+    /// Legnt auf Basis einer WallDimension den Startpunkt sowie den Ort der Instanziierung des
+    /// übergebenen WallObjektes fest. Hierzu wird zufallsbasiert eine Richtung sowie ein Startpunkt
+    /// erzeugt.  Hierbei entsprechen die Euler Winkel je nach Direction den Gradzahlen 0, 90, 180
+    /// oder 270 Grad.
     /// </summary>
-    /// <returns>Der Eulerwinkel</returns>
-    private float GetDirections()
+    /// <param name="newWallObject">Das aktuelle WallObject, auf dem die Anpassungen erfolgen sollen</param>
+    /// <param name="wallDimension">Ein Record, der alle zur Erstellung benötigten Rahmenparameter enthält</param>
+    private void GetDirectionAndStartpoint(GameObject newWallObject, WallDimension wallDimension)
     {
         Directions direction = (Directions)RandomNumberGenerator.GetInt32(1, 5);
+        Transform curTransform = newWallObject.transform;
+
         float eulerAngle = 0;
+
+        float randomXFloatNumber = Random.Range(wallDimension.leftStartXPosition,
+            wallDimension.rightStartXPosition);
+
+        float randomZFloatNumber = Random.Range(wallDimension.bottomStartZPosition,
+            wallDimension.topStartZPosition);
+
+        float newWallLength = Random.Range(
+            wallDimension.MinLengthUnit,
+            wallDimension.MaxLengthUnit);
 
         switch (direction)
         {
             case Game.Enumerations.Directions.forward:
                 eulerAngle = 0f;
+
+                curTransform.position = new Vector3(
+                    randomXFloatNumber,
+                    wallDimension.HeightStartYPosition,
+                    wallDimension.bottomStartZPosition);
                 break;
             case Game.Enumerations.Directions.Right:
                 eulerAngle = 90f;
+
+                curTransform.position = new Vector3(
+                    wallDimension.leftStartXPosition,
+                    wallDimension.HeightStartYPosition,
+                    randomZFloatNumber);
                 break;
             case Game.Enumerations.Directions.backward:
                 eulerAngle = 180f;
+
+                curTransform.position = new Vector3(
+                    randomXFloatNumber,
+                    wallDimension.HeightStartYPosition,
+                    wallDimension.topStartZPosition);
                 break;
             case Game.Enumerations.Directions.Left:
                 eulerAngle = 270f;
+
+                curTransform.position = new Vector3(
+                    wallDimension.rightStartXPosition,
+                    wallDimension.HeightStartYPosition,
+                    randomZFloatNumber);
                 break;
         }
 
-        return eulerAngle;
+        curTransform.Rotate(0f, eulerAngle, 0f);
+    }
+*/
+
+    private void GetDirectionAndStartpoint(List<GameObject> newWallObjects, WallDimension wallDimension)
+    {
+        Directions direction = (Directions)RandomNumberGenerator.GetInt32(1, 5);
+        //Transform curTransform = newWallObject.transform;
+
+        float eulerAngle = 0;
+
+        float randomXFloatNumber = Random.Range(wallDimension.leftStartXPosition,
+            wallDimension.rightStartXPosition);
+
+        float randomZFloatNumber = Random.Range(wallDimension.bottomStartZPosition,
+            wallDimension.topStartZPosition);
+
+        float newWallLength = Random.Range(
+            wallDimension.MinLengthUnit,
+            wallDimension.MaxLengthUnit);
+
+        float curOffset = 0;
+        foreach (var newWallObject in newWallObjects)
+        {
+            Transform curTransform = newWallObject.transform;
+
+            switch (direction)
+            {
+                case Game.Enumerations.Directions.forward:
+                    eulerAngle = 0f;
+
+                    curTransform.position = new Vector3(
+                        randomXFloatNumber,
+                        wallDimension.HeightStartYPosition,
+                        wallDimension.bottomStartZPosition - curOffset);
+                    break;
+                case Game.Enumerations.Directions.Right:
+                    eulerAngle = 90f;
+
+                    curTransform.position = new Vector3(
+                        wallDimension.leftStartXPosition - curOffset,
+                        wallDimension.HeightStartYPosition,
+                        randomZFloatNumber);
+                    break;
+                case Game.Enumerations.Directions.backward:
+                    eulerAngle = 180f;
+
+                    curTransform.position = new Vector3(
+                        randomXFloatNumber,
+                        wallDimension.HeightStartYPosition,
+                        wallDimension.topStartZPosition + curOffset);
+                    break;
+                case Game.Enumerations.Directions.Left:
+                    eulerAngle = 270f;
+
+                    curTransform.position = new Vector3(
+                        wallDimension.rightStartXPosition + curOffset,
+                        wallDimension.HeightStartYPosition,
+                        randomZFloatNumber);
+                    break;
+            }
+
+            curOffset = curOffset + 1.0f;
+            curTransform.Rotate(0f, eulerAngle, 0f);
+        }
     }
 }

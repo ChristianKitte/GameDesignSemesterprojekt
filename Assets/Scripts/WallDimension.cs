@@ -8,6 +8,31 @@ using UnityEngine;
 public record WallDimension()
 {
     /// <summary>
+    /// Die linke Position, ab der ein WallObject startet
+    /// </summary>
+    public float leftStartXPosition { get; set; }
+
+    /// <summary>
+    /// Die obere (forward) Position, ab der ein WallObject startet
+    /// </summary>
+    public float topStartZPosition { get; set; }
+
+    /// <summary>
+    /// Die rechte Position, ab der ein WallObject startet
+    /// </summary>
+    public float rightStartXPosition { get; set; }
+
+    /// <summary>
+    /// Die untere (backward) Position, ab der ein WallObject startet
+    /// </summary>
+    public float bottomStartZPosition { get; set; }
+
+    /// <summary>
+    /// Die Höhe, ab der ein WallObject startet
+    /// </summary>
+    public float HeightStartYPosition { get; set; }
+
+    /// <summary>
     /// Die linke Position, ab der ein WallObject sich zerstört
     /// </summary>
     public float leftDestroyXPosition { get; set; }
@@ -58,12 +83,12 @@ public record WallDimension()
     public float MaxThickness { get; set; }
 
     /// <summary>
-    /// Die minimale Länge
+    /// Die minimale Länge in Unit (1 Unit entspricht 0.5 Meter)
     /// </summary>
-    public float MinLength { get; set; }
+    public int MinLengthUnit { get; set; }
 
     /// <summary>
-    /// Die maximale Länge
+    /// Die maximale Länge in Unit (1 Unit entspricht 0.5 Meter)
     /// </summary>
-    public float MaxLength { get; set; }
+    public int MaxLengthUnit { get; set; }
 }

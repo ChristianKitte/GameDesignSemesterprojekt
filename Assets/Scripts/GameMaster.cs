@@ -15,6 +15,21 @@ public class GameMaster : MonoBehaviour
 {
     #region Einstellungen und Variablen
 
+    [Tooltip("Die linke Position, ab der ein WallObject startet")] [SerializeField]
+    private float leftStartXPosition = 203f;
+
+    [Tooltip("Die obere (forward) Position, ab der ein WallObject startet")] [SerializeField]
+    private float topStartZPosition = 191f;
+
+    [Tooltip("Die rechte Position, ab der ein WallObject startet")] [SerializeField]
+    private float rightStartXPosition = 203f;
+
+    [Tooltip("Die untere (backward) Position, ab der ein WallObject startet")] [SerializeField]
+    private float bottomStartZPosition = 191f;
+
+    [Tooltip("Die Höhe, ab der ein WallObject startet")] [SerializeField]
+    private float HeightStartYPosition = 0.5f;
+
     [Tooltip("Die linke Position, ab der ein WallObject sich zerstört")] [SerializeField]
     private float leftDestroyXPosition = 130f;
 
@@ -39,11 +54,6 @@ public class GameMaster : MonoBehaviour
     [Tooltip("Referenzwert in Level1 - Maximale Wartezeit zwischen neuen Mauern in Sekunden")] [SerializeField]
     private int MaxWallIntervallInSeconds;
 
-    /// <summary>
-    /// Aktuell verwendeter Intervall für das Generieren einer Wand
-    /// </summary>
-    private int curWallIntervallInSeconds;
-
     [Tooltip("Referenzwert in Level1 - Minimaler Anfangswert der Geschwindigkeit der Wälle")] [SerializeField]
     private float StartMinMoveSpeed = 5.0f;
 
@@ -62,11 +72,19 @@ public class GameMaster : MonoBehaviour
     [Tooltip("Referenzwert in Level1 - Maximaler Endwert der Dicke der Wälle")] [SerializeField]
     private float StartMaxThickness = 1.5f;
 
-    [Tooltip("Referenzwert in Level1 - Minimaler Anfangswert der Länge der Wälle")] [SerializeField]
-    private float StartMinLength = 0.5f;
+    [Tooltip(
+        "Referenzwert in Level1 - Minimaler Anfangswert der Länge der Wälle in Units. ein UnNit entspricht 0.5 Meter")]
+    [SerializeField]
+    private int StartMinLengthUnits = 5;
 
-    [Tooltip("Referenzwert in Level1 - Maximaler Endwert der Länge der Wälle")] [SerializeField]
-    private float StartMaxLength = 20.0f;
+    [Tooltip("Referenzwert in Level1 - Maximaler Endwert der Länge der Wälle in Units. ein Unit entspricht 0.5 Meter")]
+    [SerializeField]
+    private int StartMaxLengthUnit = 40;
+
+    /// <summary>
+    /// Aktuell verwendeter Intervall für das Generieren einer Wand
+    /// </summary>
+    private int curWallIntervallInSeconds;
 
     private int playedSecondsSinceStart;
     private int remainingSecondsSinceStart;
@@ -105,6 +123,7 @@ public class GameMaster : MonoBehaviour
     {
         playedSecondsSinceStart++;
         remainingSecondsSinceStart--;
+        /*
         curWallIntervallInSeconds--;
 
         // Eine neue Wand erstellen und die Zeit bis zur nächsten Wand zufällig festlegen, sofern
@@ -113,6 +132,13 @@ public class GameMaster : MonoBehaviour
         {
             WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
             curWallIntervallInSeconds = getNewWallIntervall(currentLevel);
+        }
+        */
+
+        int curWallIntervall = getNewWallIntervall(currentLevel);
+        for (int i = 0; i < curWallIntervall; i++)
+        {
+            WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
         }
 
         // Wird betreten, wenn die aktuelle Zeit remainingSecondsSinceStart den Wert 0 erreicht hat. Im
@@ -151,6 +177,11 @@ public class GameMaster : MonoBehaviour
     {
         var newWallDimension = new WallDimension()
         {
+            leftStartXPosition = leftStartXPosition,
+            topStartZPosition = topStartZPosition,
+            rightStartXPosition = rightStartXPosition,
+            bottomStartZPosition = bottomStartZPosition,
+            HeightStartYPosition = HeightStartYPosition,
             leftDestroyXPosition = leftDestroyXPosition,
             topDestroyZPosition = topDestroyZPosition,
             rightDestroyXPosition = rightDestroyXPosition,
@@ -161,8 +192,8 @@ public class GameMaster : MonoBehaviour
             MaxHeight = StartMaxHeight,
             MinThickness = StartMinThickness,
             MaxThickness = StartMaxThickness,
-            MinLength = StartMinLength,
-            MaxLength = StartMaxLength
+            MinLengthUnit = StartMinLengthUnits,
+            MaxLengthUnit = StartMaxLengthUnit
         };
 
         return newWallDimension;
