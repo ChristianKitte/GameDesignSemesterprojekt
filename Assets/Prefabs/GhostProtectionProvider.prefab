@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8792459857942607536}
   - component: {fileID: 4588329998691852245}
   - component: {fileID: 8308817958279019260}
+  - component: {fileID: 8232678239281037138}
   m_Layer: 6
   m_Name: GhostProtectionProvider
   m_TagString: Untagged
@@ -132,6 +133,18 @@ MonoBehaviour:
   TextComponent: {fileID: 4932671161059796011}
   MinValue: 1
   MaxValue: 3
+--- !u!114 &8232678239281037138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4082514927436680263
 GameObject:
   m_ObjectHideFlags: 0

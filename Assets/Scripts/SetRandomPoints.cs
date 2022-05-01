@@ -21,8 +21,7 @@ public class SetRandomPoints : MonoBehaviour
     {
         MinRealValue = (float)MinValue / 10;
         MaxRealValue = (float)MaxValue / 10;
-
-        Random.InitState(DateTime.Now.Millisecond);
+        
         livePoint = (int)(Random.Range(MinRealValue, MaxRealValue) * 10);
         TextComponent.SetText(livePoint.ToString());
     }

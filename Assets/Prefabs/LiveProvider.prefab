@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 8792459857942607536}
   - component: {fileID: 6114830445167310370}
   - component: {fileID: 6608772998046710390}
+  - component: {fileID: 4253570813583592774}
   m_Layer: 6
   m_Name: LiveProvider
   m_TagString: Untagged
@@ -321,3 +322,15 @@ MonoBehaviour:
   TextComponent: {fileID: 5068160147102232111}
   MinValue: 1
   MaxValue: 20
+--- !u!114 &4253570813583592774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

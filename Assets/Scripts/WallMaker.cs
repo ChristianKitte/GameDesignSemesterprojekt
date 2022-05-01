@@ -77,7 +77,6 @@ public class WallMaker : MonoBehaviour
     private void GetDirectionAndStartpoint(List<GameObject> newWallObjects, WallDimension wallDimension)
     {
         Directions direction = (Directions)RandomNumberGenerator.GetInt32(1, 5);
-        //Transform curTransform = newWallObject.transform;
 
         float eulerAngle = 0;
 

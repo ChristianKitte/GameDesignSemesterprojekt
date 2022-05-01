@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ProviderMaker : MonoBehaviour
 {
@@ -26,6 +28,52 @@ public class ProviderMaker : MonoBehaviour
 
     public void CreateProvider(ProviderDimension providerDimension)
     {
+        var countOfLiveProvider = RandomNumberGenerator.GetInt32(
+            providerDimension.MinCountLiveProvider,
+            providerDimension.MaxCountLiveProvider + 1);
 
+        var countOfGhostProtectionProvider = RandomNumberGenerator.GetInt32(
+            providerDimension.MinCountGhostProtectionProvider,
+            providerDimension.MaxCountGhostProtectionProvider + 1);
+
+        var countOfGoThroughProvider = RandomNumberGenerator.GetInt32(
+            providerDimension.MinCountGoThroughProvider,
+            providerDimension.MaxCountGoThroughProvider + 1);
+
+        for (int i = 0; i < countOfLiveProvider; i++)
+        {
+            float randomXFloatNumber = Random.Range(providerDimension.leftStartXPositionProvider,
+                providerDimension.rightStartXPositionProvider);
+
+            float randomZFloatNumber = Random.Range(providerDimension.bottomStartZPositionProvider,
+                providerDimension.topStartZPositionProvider);
+
+            var newProvider = Instantiate(LiveProvider);
+            newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
+        }
+
+        for (int i = 0; i < countOfGhostProtectionProvider; i++)
+        {
+            float randomXFloatNumber = Random.Range(providerDimension.leftStartXPositionProvider,
+                providerDimension.rightStartXPositionProvider);
+
+            float randomZFloatNumber = Random.Range(providerDimension.bottomStartZPositionProvider,
+                providerDimension.topStartZPositionProvider);
+
+            var newProvider = Instantiate(GhostProtectionProvider);
+            newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
+        }
+
+        for (int i = 0; i < countOfGoThroughProvider; i++)
+        {
+            float randomXFloatNumber = Random.Range(providerDimension.leftStartXPositionProvider,
+                providerDimension.rightStartXPositionProvider);
+
+            float randomZFloatNumber = Random.Range(providerDimension.bottomStartZPositionProvider,
+                providerDimension.topStartZPositionProvider);
+
+            var newProvider = Instantiate(GoThroughProvider);
+            newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
+        }
     }
 }

@@ -153,6 +153,13 @@ public class GameMaster : MonoBehaviour
 
     #endregion
 
+    private EventManager eventManager;
+
+    private void OnEnable()
+    {
+        eventManager = EventManager.Instance();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -183,6 +190,7 @@ public class GameMaster : MonoBehaviour
         playedSecondsSinceStart++;
         remainingSecondsSinceStart--;
 
+        EventManager.Instance().SendKillSignalForProvider();
         ProviderFactory.GetComponent<ProviderMaker>().CreateProvider(getNewProviderDimension(currentLevel));
 
         int curWallIntervall = getNewWallIntervall(currentLevel);

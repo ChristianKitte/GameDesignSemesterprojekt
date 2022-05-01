@@ -32,7 +32,11 @@ public class EventManager
     /// </summary>
     public event Action StartTimer;
 
-    public event Action CreateWall;
+    /// <summary>
+    /// Signalisiert eine Löschaufforderung an alle Provider
+    /// </summary>
+    public event Action DestroyProvider;
+
 
     /// <summary>
     /// Gibt die Instanz des EventManagers zurück (Singleton)
@@ -88,8 +92,8 @@ public class EventManager
         StartTimer?.Invoke();
     }
 
-    public void SendCreateWall()
+    public void SendKillSignalForProvider()
     {
-        CreateWall?.Invoke();
+        DestroyProvider?.Invoke();
     }
 }
