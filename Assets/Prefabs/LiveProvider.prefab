@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 6114830445167310370}
   - component: {fileID: 6608772998046710390}
   - component: {fileID: 4253570813583592774}
+  - component: {fileID: 7755054495215550862}
   m_Layer: 6
   m_Name: LiveProvider
   m_TagString: Untagged
@@ -220,7 +221,7 @@ Transform:
   m_GameObject: {fileID: 3066338822720895660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 360, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5807284677678111764}
@@ -301,6 +302,7 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: cebc12130326d9744a3f218c8f68b1de, type: 2}
   m_Animations:
+  - {fileID: 7400000, guid: 0db2c809a4a276c4bb0593b3ddf5fe65, type: 2}
   - {fileID: 7400000, guid: cebc12130326d9744a3f218c8f68b1de, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -334,3 +336,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7755054495215550862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af3327ee6263c74480f05a40704a0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetTag: Player

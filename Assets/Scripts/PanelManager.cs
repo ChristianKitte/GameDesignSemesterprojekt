@@ -144,6 +144,6 @@ public class PanelManager : MonoBehaviour
     private void quitApplication()
     {
         Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 }
