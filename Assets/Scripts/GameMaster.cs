@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Game.Enumerations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -165,6 +166,7 @@ public class GameMaster : MonoBehaviour
     {
         remainingSecondsSinceStart = TimePerRoundInSeconds + 1;
         EventManager.Instance().SecondTick += HandleSecondEvent;
+        EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
 
         curWallIntervallInSeconds = getNewWallIntervall(currentLevel);
     }
@@ -180,6 +182,18 @@ public class GameMaster : MonoBehaviour
     private void OnDisable()
     {
         EventManager.Instance().SecondTick -= HandleSecondEvent;
+    }
+
+    /// <summary>
+    /// Wird aufgerufen, wenn ein GameObjekt mit der Komponente DeleteOnCollision oder SendMessageOnCollision
+    /// eine Kollision mit einem in TargetTag der Komponente festgelegten GameObjekt hat
+    /// </summary>
+    /// <param name="collisionType">Der Typ der Kollision</param>
+    /// <param name="value">Der dem Objekt zugeordnete Wert</param>
+    private void HandleCollisionDetectedEvent(CollisionObjektTyp collisionType, int value)
+    {
+        Debug.Log(collisionType.ToString());
+        Debug.Log(value.ToString());
     }
 
     /// <summary>

@@ -1,11 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Enumerations;
 using UnityEngine;
 
+/// <summary>
+/// Der Event Manager verbindet als Singleton lose Event Publisher mit Event Listener, ohne
+/// feste Referenzen.
+/// </summary>
 public class EventManager
 {
+    /// <summary>
+    /// Einzige Instanz von EventManager
+    /// </summary>
     private static EventManager _eventManager;
+
+    /// <summary>
+    /// Gibt die Instanz des EventManagers zurück (Singleton)
+    /// </summary>
+    /// <returns>Die einzige Instanz von EventManager</returns>
+    public static EventManager Instance()
+    {
+        if (_eventManager == null)
+        {
+            _eventManager = new EventManager();
+        }
+
+        return _eventManager;
+    }
+
+    #region Events
 
     /// <summary>
     /// Wird jede Spielsekunde ausgelöst
@@ -37,20 +61,14 @@ public class EventManager
     /// </summary>
     public event Action DestroyProvider;
 
-
     /// <summary>
-    /// Gibt die Instanz des EventManagers zurück (Singleton)
+    /// Signalisiert die Kollision mit einem Objekt
     /// </summary>
-    /// <returns>Die einzige Instanz von EventManager</returns>
-    public static EventManager Instance()
-    {
-        if (_eventManager == null)
-        {
-            _eventManager = new EventManager();
-        }
+    public event Action<CollisionObjektTyp, int> CollisionDetected;
 
-        return _eventManager;
-    }
+    #endregion
+
+    #region TriggerCallFunctions
 
     /// <summary>
     /// Löst das Event SecondTick aus
@@ -92,8 +110,23 @@ public class EventManager
         StartTimer?.Invoke();
     }
 
+    /// <summary>
+    /// Löst das Ereignis DestroyProvider aus
+    /// </summary>
     public void SendKillSignalForProvider()
     {
         DestroyProvider?.Invoke();
     }
+
+    /// <summary>
+    /// Löst das Ereignis CollisionDetected aus
+    /// </summary>
+    /// <param name="objektTyp">Der Objekttyp der Kollision</param>
+    /// <param name="objectValue">Der Wert der Kollision</param>
+    public void SendCollisionMessage(CollisionObjektTyp objektTyp, int objectValue)
+    {
+        CollisionDetected?.Invoke(objektTyp, objectValue);
+    }
+
+    #endregion
 }

@@ -7,9 +7,9 @@ using UnityEngine;
 /// <summary>
 /// Wenn das übergeordnete GameObjekt eine Kollision mit einem Objekt mit dem im "Tag" festgelegten
 /// TargetTag hat, wird eine Nachricht vom Typ CollisionDetected mit dem festgelegten Objekttyp
-/// versendet. Anschließend wird das Übergeordnete Objekt zerstört.
+/// versendet.
 /// </summary>
-public class DeleteOnCollision : MonoBehaviour
+public class SendMessageOnCollision : MonoBehaviour
 {
     [Tooltip("Festgelegtes Target für die Kollisionsmeldung")] [SerializeField]
     private string TargetTag = "Player";
@@ -20,15 +20,6 @@ public class DeleteOnCollision : MonoBehaviour
     [Tooltip("Gibt den bei einer Kollision zu übermittelnden Wert, wenn keine SetRandomValue Komponente vorhanden ist")]
     [SerializeField]
     private int defaultValueOnMissingValue = 0;
-
-    /// <summary>
-    /// Ermöglicht das Überschreiben des defaultValueOnMissingValue aus anderen Skripten heraus
-    /// </summary>
-    /// <param name="value">Der zu setzende Wert</param>
-    public void SetDefaultValue(int value)
-    {
-        this.defaultValueOnMissingValue = value;
-    }
 
     /// <summary>
     /// Wird ausgelöst, sofern eie Kollision stattfindet
@@ -45,9 +36,6 @@ public class DeleteOnCollision : MonoBehaviour
         if (collision.gameObject.tag != null && collision.gameObject.tag == TargetTag)
         {
             EventManager.Instance().SendCollisionMessage(collisionObjectTyp, currentValue.Value);
-
-            Destroy(this.gameObject);
-            Destroy(this);
         }
     }
 }

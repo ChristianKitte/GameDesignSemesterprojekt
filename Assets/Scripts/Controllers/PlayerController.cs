@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
             _previousPlayerLookInput, _playerLookInput * Time.deltaTime, _playerLookInputLerpTime);
     }
 
-
     private void PlayerLook()
     {
         _rigidboy.rotation = Quaternion.Euler(

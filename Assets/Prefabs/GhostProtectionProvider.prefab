@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTag: Player
+  collisionObjectTyp: 3
 --- !u!1 &4082514927436680263
 GameObject:
   m_ObjectHideFlags: 0

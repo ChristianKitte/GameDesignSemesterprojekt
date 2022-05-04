@@ -349,3 +349,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTag: Player
+  collisionObjectTyp: 1
