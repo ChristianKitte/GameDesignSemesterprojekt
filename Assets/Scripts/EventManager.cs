@@ -44,7 +44,7 @@ public class EventManager
     /// <summary>
     /// Wird ausgelöst, wenn der Timer gestoppt und auf 0 gesetzt wird
     /// </summary>
-    public event Action ResetTimer;
+    public event Action<int> ResetTimer;
 
     /// <summary>
     /// Wird ausgelöst, wenn der Timer mit aktuellen Stand angehalten wird
@@ -89,9 +89,10 @@ public class EventManager
     /// <summary>
     /// Löst das Ereignis ResetTimer aus
     /// </summary>
-    public void SendResetTimer()
+    /// <param name="newStartTimeInSeconds">Die Laufzeit, für die der Timer eingestellt wird</param>
+    public void SendResetTimer(int newStartTimeInSeconds)
     {
-        ResetTimer?.Invoke();
+        ResetTimer?.Invoke(newStartTimeInSeconds);
     }
 
     /// <summary>

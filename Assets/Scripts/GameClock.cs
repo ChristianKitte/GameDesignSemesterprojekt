@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Kann wahrscheinlich weg....
+/// </summary>
 public class GameClock : MonoBehaviour
 {
     private int currentSecondsOld;
@@ -40,7 +43,7 @@ public class GameClock : MonoBehaviour
         }
     }
 
-    void ResetTimer()
+    void ResetTimer(int newStartTimeInSeconds)
     {
         currentTime = 0;
         currentSecondsNew = 0;

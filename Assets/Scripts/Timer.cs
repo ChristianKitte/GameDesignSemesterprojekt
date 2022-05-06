@@ -14,6 +14,18 @@ public class Timer : MonoBehaviour
 
     private bool timerIsActive = false;
 
+    private void OnEnable()
+    {
+        EventManager.Instance().ResetTimer += resetTimer;
+        EventManager.Instance().StartTimer += startTimer;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.Instance().ResetTimer -= resetTimer;
+        EventManager.Instance().StartTimer -= startTimer;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,17 +44,31 @@ public class Timer : MonoBehaviour
         currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
 
         TextComponent.SetText(currentTimeText);
-        Console.WriteLine(currentTimeText);
 
+        /* Für Debugzwecke
         if (currentTime <= 0)
         {
+            resetTimer(5);  
             startTimer();
         }
+        */
     }
 
+    /// <summary>
+    /// Setzt den Timer zurück und legt die Laufzeit neu fest. Der Timer wird nicht gestartet.
+    /// </summary>
+    /// <param name="newStartTimeInSeconds">Die Laufzeit, für die der Timer eingestellt wird</param>
+    void resetTimer(int newStartTimeInSeconds)
+    {
+        currentTime = newStartTimeInSeconds;
+        timerIsActive = true;
+    }
+
+    /// <summary>
+    /// Startet den Timer mit der aktuell eingestellten Laufzeit
+    /// </summary>
     void startTimer()
     {
-        currentTime = TimeInMinute * 60;
         timerIsActive = true;
     }
 

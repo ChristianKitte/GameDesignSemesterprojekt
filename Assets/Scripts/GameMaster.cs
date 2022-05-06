@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = System.Random;
+using TMPro;
 
 /// <summary>
 /// Der GameMaster steuert den Spielverlauf und hält die aktuellen Zustände. Es handelt sich
@@ -14,6 +15,8 @@ using Random = System.Random;
 /// </summary>
 public class GameMaster : MonoBehaviour
 {
+    [SerializeField] private TMP_Text TextComponent;
+
     #region Einstellungen und Variablen
 
     [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
@@ -25,13 +28,8 @@ public class GameMaster : MonoBehaviour
     [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
     private GameObject ProviderFactory;
 
-    /// <summary>
-    /// Aktuell verwendeter Intervall für das Generieren einer Wand
-    /// </summary>
-    private int curWallIntervallInSeconds;
-
     private int playedSecondsSinceStart;
-    private int remainingSecondsSinceStart;
+
     private string currentTimeText;
 
     private int currentLevel = 1;
@@ -155,25 +153,15 @@ public class GameMaster : MonoBehaviour
     #endregion
 
     private EventManager eventManager;
+    private GameState gameState;
 
     private void OnEnable()
     {
         eventManager = EventManager.Instance();
-    }
+        gameState = GameState.Instance();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        remainingSecondsSinceStart = TimePerRoundInSeconds + 1;
-        EventManager.Instance().SecondTick += HandleSecondEvent;
-        EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
-
-        curWallIntervallInSeconds = getNewWallIntervall(currentLevel);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        gameState.currentLevel = 1;
+        gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
     }
 
     /// <summary>
@@ -181,8 +169,99 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        eventManager = null;
+        gameState = null;
+
         EventManager.Instance().SecondTick -= HandleSecondEvent;
+        EventManager.Instance().CollisionDetected -= HandleCollisionDetectedEvent;
     }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        EventManager.Instance().SecondTick += HandleSecondEvent;
+        EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
+
+        startGameLevel();
+    }
+
+    private void startGame()
+    {
+    }
+
+    private void endGame()
+    {
+    }
+
+    /// <summary>
+    /// Startet das aktuell gesetzte Level 
+    /// </summary>
+    private void startGameLevel()
+    {
+        // Shortcut - während der Entwicklung werden Einstellungen nicht auf Basis des Levels angepasst
+
+        gameState.remainingSecondsToPlayLevel = gameState.defaultSecondsToPlayPerLevel;
+
+        EventManager.Instance().SendResetTimer(gameState.defaultSecondsToPlayPerLevel);
+        EventManager.Instance().SendStartTimer();
+
+        ProviderFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
+
+        // Debugausgabe
+        string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
+        string playerGetPointString =
+            $"Der Spieler hat {gameState.collectedLiveProviderPoints.ToString()} Punkte gesammelt";
+        string playerGoThroughString =
+            $"Der Spieler hat {gameState.collectedGoThroughProviderSeconds} Sekunden zur Verfügung, um durch Wände zu gehen";
+        string playerGhostProtectionString =
+            $"Der Spieler hat {gameState.collectedGhostProtectionProviderSeconds} Sekunden zur Verfügung, in denen er vor Geister geschützt ist";
+
+        string ausgabe = playerPointString
+                         + System.Environment.NewLine
+                         + playerGetPointString
+                         + System.Environment.NewLine
+                         + playerGoThroughString
+                         + System.Environment.NewLine
+                         + playerGhostProtectionString;
+
+        TextComponent.SetText(ausgabe);
+    }
+
+    /// <summary>
+    /// Beendet das aktuell gesetzte Level
+    /// </summary>
+    private void finishCurrentGameLevel()
+    {
+        EventManager.Instance().SendKillSignalForProvider();
+    }
+
+    /// <summary>
+    /// Setzt den Levelzähler um eins hoch und startet das neue Level
+    /// </summary>
+    private void runNextLevel()
+    {
+        gameState.currentLevel++;
+        startGameLevel();
+    }
+
+    /// <summary>
+    /// Setzt den Levelzähler um eins herunter und startet das neue Level.
+    /// Ist das aktuelle Level das erste Level, so bleibt der Levelzähler unverändert.
+    /// </summary>
+    private void runPreviousLevel()
+    {
+        if (gameState.currentLevel == 1)
+        {
+            startGameLevel();
+        }
+        else
+        {
+            gameState.currentLevel--;
+            startGameLevel();
+        }
+    }
+
+    #region Game Events
 
     /// <summary>
     /// Wird aufgerufen, wenn ein GameObjekt mit der Komponente DeleteOnCollision oder SendMessageOnCollision
@@ -192,8 +271,45 @@ public class GameMaster : MonoBehaviour
     /// <param name="value">Der dem Objekt zugeordnete Wert</param>
     private void HandleCollisionDetectedEvent(CollisionObjektTyp collisionType, int value)
     {
-        Debug.Log(collisionType.ToString());
-        Debug.Log(value.ToString());
+        switch (collisionType)
+        {
+            case CollisionObjektTyp.LiveProvider:
+                gameState.playerPoints = gameState.playerPoints + value;
+                gameState.collectedLiveProviderPoints = gameState.collectedLiveProviderPoints + value;
+                break;
+            case CollisionObjektTyp.GoThroughProvider:
+                gameState.collectedGoThroughProviderSeconds = gameState.collectedLiveProviderPoints + value;
+                break;
+            case CollisionObjektTyp.GhostProtectionProvider:
+                gameState.collectedGhostProtectionProviderSeconds = gameState.collectedLiveProviderPoints + value;
+                break;
+            case CollisionObjektTyp.MovingWall:
+                gameState.playerPoints = gameState.playerPoints - value;
+                break;
+            case CollisionObjektTyp.Ghost:
+                break;
+            case CollisionObjektTyp.MainTarget:
+                break;
+        }
+
+        // Debugausgabe
+        string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
+        string playerGetPointString =
+            $"Der Spieler hat {gameState.collectedLiveProviderPoints.ToString()} Punkte gesammelt";
+        string playerGoThroughString =
+            $"Der Spieler hat {gameState.collectedGoThroughProviderSeconds} Sekunden zur Verfügung, um durch Wände zu gehen";
+        string playerGhostProtectionString =
+            $"Der Spieler hat {gameState.collectedGhostProtectionProviderSeconds} Sekunden zur Verfügung, in denen er vor Geister geschützt ist";
+
+        string ausgabe = playerPointString
+                         + System.Environment.NewLine
+                         + playerGetPointString
+                         + System.Environment.NewLine
+                         + playerGoThroughString
+                         + System.Environment.NewLine
+                         + playerGhostProtectionString;
+
+        TextComponent.SetText(ausgabe);
     }
 
     /// <summary>
@@ -201,30 +317,36 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void HandleSecondEvent()
     {
-        playedSecondsSinceStart++;
-        remainingSecondsSinceStart--;
+        gameState.remainingSecondsToPlayLevel--;
 
-        EventManager.Instance().SendKillSignalForProvider();
-        ProviderFactory.GetComponent<ProviderMaker>().CreateProvider(getNewProviderDimension(currentLevel));
-
-        int curWallIntervall = getNewWallIntervall(currentLevel);
+        int curWallIntervall = getNewWallIntervall(gameState.currentLevel);
         for (int i = 0; i < curWallIntervall; i++)
         {
             WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
         }
 
-        // Wird betreten, wenn die aktuelle Zeit remainingSecondsSinceStart den Wert 0 erreicht hat. Im
-        // Spielkontext ist dies das Ende der zur Verfügung stehenden Zeit einer Runde
-        if (remainingSecondsSinceStart < 0)
+        // Wird betreten, wenn die maximale Spielzeit des Levels erreicht ist. In diesen Fall endet
+        // das Level und der Spieler wird um ein Level zurück gesetzt.
+        //
+        // Ist vielleicht eleganter über ein Timer Event zu lösen
+        if (gameState.remainingSecondsToPlayLevel <= 0)
         {
-            EventManager.Instance().SendResetTimer();
-            remainingSecondsSinceStart = TimePerRoundInSeconds;
-            EventManager.Instance().SendStartTimer();
-        }
+            // Um einen Level zurück setzen
+            //runPreviousLevel();
 
-        TimeSpan restzeit = TimeSpan.FromSeconds(remainingSecondsSinceStart);
-        currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
+            // for debug purposes
+            finishCurrentGameLevel();
+            runNextLevel();
+        }
+        else
+        {
+            TimeSpan restzeit = TimeSpan.FromSeconds(
+                gameState.defaultSecondsToPlayPerLevel - gameState.remainingSecondsToPlayLevel);
+            currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
+        }
     }
+
+    #endregion
 
     /// <summary>
     /// Gibt einen Zeitpunkt in Sekunden zurück. in der eine neue Wand erscheinen soll. Der Zeitpunkt befindet
