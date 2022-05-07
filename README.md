@@ -16,7 +16,7 @@
 Als Semesteraufgabe soll ein 3D Spiel mit festgelegten Anforderungen prototypisch umgesetzt werden. Lediglich
 das erste Level muss spielbar sein. 
 
-Der aktuelle und zum aktuellen Zeitpunkt sehr pototypische Stand ist 
+Der aktuelle und zum aktuellen Zeitpunkt sehr pototypische Stand ist als WebGL Anwendung
 [hier](https://gamedev.ckitte.de/) 
 aufrufbar.
 
