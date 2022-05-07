@@ -4,11 +4,10 @@
 
 **Game Design**
 
-**Dozent: Hans-Georg Reimer**
-
-**University of Applied Sciences Emden/Leer, Faculty of Technology, Department of Electrical Engineering and Informatics**
+**Dozent: Hans-Georg Reimer (Beuth Hochschule für Technik Berlin)**
 
 **Studiengang Medieninformatik Online MA, Sommersemester 2022**
+**University of Applied Sciences Emden/Leer, Faculty of Technology, Department of Electrical Engineering and Informatics**
 
 ---
 
