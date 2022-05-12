@@ -28,6 +28,9 @@ public class GameMaster : MonoBehaviour
     [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
     private GameObject ProviderFactory;
 
+    //public AudioSource audioSource;
+    //public AudioClip colliderClip;
+
     private int playedSecondsSinceStart;
 
     private string currentTimeText;

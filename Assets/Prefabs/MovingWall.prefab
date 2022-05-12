@@ -16,9 +16,11 @@ GameObject:
   - component: {fileID: 1992168486673540545}
   - component: {fileID: 1992168486673540543}
   - component: {fileID: 8642230382141587908}
+  - component: {fileID: 6923815923687242842}
+  - component: {fileID: 3552654084362354429}
   m_Layer: 0
   m_Name: MovingWall
-  m_TagString: Untagged
+  m_TagString: MovingWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -378,3 +380,29 @@ MonoBehaviour:
   TargetTag: Player
   collisionObjectTyp: 4
   defaultValueOnMissingValue: 5
+--- !u!114 &6923815923687242842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992168486673540544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2335087f7a4946c41abc2e8c260bdb80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
+  filterTag: 
+--- !u!114 &3552654084362354429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992168486673540544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
