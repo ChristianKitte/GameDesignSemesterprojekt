@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
-  filterTag: 
+  TargetTag: Player
 --- !u!114 &3552654084362354429
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -170,7 +170,7 @@ MonoBehaviour:
   LiveProvider: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
   GoThroughProvider: {fileID: 3066338822720895660, guid: 41f7342eb157bad4e8253ca23d8f7212, type: 3}
   GhostProtectionProvider: {fileID: 3066338822720895660, guid: b5ebd67977b03a7409f07e808282d545, type: 3}
-  TargetProvider: {fileID: 0}
+  TargetProvider: {fileID: 8668970938821475083, guid: a12eaa8a0c42be74cb096629135fdf12, type: 3}
 --- !u!4 &230830447 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3877445646655209677, guid: 685cc15678386d5438cde42883d05c54, type: 3}
@@ -546,6 +546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TargetProvider
       objectReference: {fileID: 0}
+    - target: {fileID: 8668970938821475083, guid: a12eaa8a0c42be74cb096629135fdf12, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a12eaa8a0c42be74cb096629135fdf12, type: 3}
 --- !u!1 &338640491
@@ -813,13 +817,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: bf17d3a88e3294185953a4c2aa69b03d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 256
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -1041,6 +1045,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1170,6 +1178,10 @@ PrefabInstance:
     - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_RootOrder
@@ -2026,6 +2038,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LiveProvider
       objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -2172,6 +2188,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GhostProtectionProvider
       objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: b5ebd67977b03a7409f07e808282d545, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: b5ebd67977b03a7409f07e808282d545, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -2236,7 +2256,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1312292575
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2579,6 +2599,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoTroughProvider
       objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: 41f7342eb157bad4e8253ca23d8f7212, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: 41f7342eb157bad4e8253ca23d8f7212, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -2843,7 +2867,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1444
+  m_Name: pb_Mesh-1452
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3115,7 +3139,7 @@ PrefabInstance:
       objectReference: {fileID: 1723352834}
     - target: {fileID: 1992168486673540541, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
       propertyPath: m_VersionIndex
-      value: 5033
+      value: 5036
       objectReference: {fileID: 0}
     - target: {fileID: 1992168486673540542, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
       propertyPath: m_RootOrder
@@ -3164,6 +3188,10 @@ PrefabInstance:
     - target: {fileID: 1992168486673540544, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
       propertyPath: m_Name
       value: MovingWall
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992168486673540544, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1992168486673540545, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
       propertyPath: m_Mesh
@@ -3701,7 +3729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextComponent: {fileID: 1908137729}
-  TimePerRoundInSeconds: 5
+  TimePerRoundInSeconds: 15
   WallFactory: {fileID: 1317794039}
   ProviderFactory: {fileID: 72070368}
   leftStartXPosition: 172
@@ -3739,6 +3767,10 @@ MonoBehaviour:
   MaxValueGhostProtectionProvider: 6
   MinValueGoThroughProvider: 1
   MaxValueGoThroughProvider: 2
+  leftStartXPositionPlayer: 0
+  topStartZPositionPlayer: 0
+  rightStartXPositionPlayer: 0
+  bottomStartZPositionPlayer: 0
 --- !u!4 &2108444523 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1992168486673540542, guid: 55dfdaafc2cf7e74ca6f60713da74e6c, type: 3}
@@ -3762,6 +3794,10 @@ PrefabInstance:
     - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066338822720895660, guid: 685cc15678386d5438cde42883d05c54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3877445646655209677, guid: 685cc15678386d5438cde42883d05c54, type: 3}
       propertyPath: m_RootOrder

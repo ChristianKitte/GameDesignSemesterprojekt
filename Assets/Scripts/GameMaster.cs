@@ -353,6 +353,7 @@ public class GameMaster : MonoBehaviour
         }
 
         // Debugausgabe
+        string playerLevelString = $"Aktueller Level: {gameState.currentLevel.ToString()}";
         string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
         string playerGetPointString =
             $"Der Spieler hat {gameState.collectedLiveProviderPoints.ToString()} Punkte gesammelt";
@@ -361,7 +362,9 @@ public class GameMaster : MonoBehaviour
         string playerGhostProtectionString =
             $"Der Spieler hat {gameState.collectedGhostProtectionProviderSeconds} Sekunden zur Verfügung, in denen er vor Geister geschützt ist";
 
-        string ausgabe = playerPointString
+        string ausgabe = playerLevelString
+                         + System.Environment.NewLine
+                         + playerPointString
                          + System.Environment.NewLine
                          + playerGetPointString
                          + System.Environment.NewLine
@@ -396,12 +399,14 @@ public class GameMaster : MonoBehaviour
 
             // for debug purposes
             finishCurrentGameLevel();
-            runNextLevel();
         }
         else
         {
+            
+            
             TimeSpan restzeit = TimeSpan.FromSeconds(
                 gameState.defaultSecondsToPlayPerLevel - gameState.remainingSecondsToPlayLevel);
+            
             currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
         }
     }
