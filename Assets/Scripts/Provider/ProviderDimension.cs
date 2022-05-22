@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Ein Record, der die Min und Max Werte definiert, zwischen denen ein Wall angelegt werden soll.
+/// Ein Record, der die Min und Max Werte definiert, zwischen denen die betreffenden Attribute
+/// angelegt werden sollen.
 /// </summary>
 public record ProviderDimension()
 {
@@ -16,7 +17,7 @@ public record ProviderDimension()
     /// Die maximale Anzahl an LiveProvider
     /// </summary>
     public int MaxCountLiveProvider { get; set; }
-    
+
     /// <summary>
     /// Die minimale Anzahl an GhostProtectionProvider
     /// </summary>
@@ -26,7 +27,7 @@ public record ProviderDimension()
     /// Die maximale Anzahl an GhostProtectionProvider
     /// </summary>
     public int MaxCountGhostProtectionProvider { get; set; }
-    
+
     /// <summary>
     /// Die minimale Anzahl an GoThroughProvider
     /// </summary>
@@ -36,7 +37,7 @@ public record ProviderDimension()
     /// Die maximale Anzahl an GoThroughProvider
     /// </summary>
     public int MaxCountGoThroughProvider { get; set; }
-    
+
     /// <summary>
     /// Die linke Position, ab der ein Provider plaziert werden darf
     /// </summary>

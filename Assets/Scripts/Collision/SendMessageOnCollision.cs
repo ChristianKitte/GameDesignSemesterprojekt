@@ -33,7 +33,7 @@ public class SendMessageOnCollision : MonoBehaviour
             currentValue = defaultValueOnMissingValue;
         }
 
-        if (collision.gameObject.tag != null && collision.gameObject.tag == TargetTag)
+        if (collision.gameObject.CompareTag(TargetTag))
         {
             EventManager.Instance().SendCollisionMessage(collisionObjectTyp, currentValue.Value);
         }

@@ -155,16 +155,35 @@ public class GameMaster : MonoBehaviour
 
     #endregion
 
+    #region Einstellugnen für PlayerDimension
+
+    [Tooltip("Die linke Position, ab der ein Player plaziert werden darf")] [SerializeField]
+    private float leftStartXPositionPlayer;
+
+    [Tooltip("Die obere (forward) Position, ab der ein Player plaziert werden darf")] [SerializeField]
+    private float topStartZPositionPlayer;
+
+    [Tooltip("Die rechte Position, ab der ein Player plaziert werden darf")] [SerializeField]
+    private float rightStartXPositionPlayer;
+
+    [Tooltip("Die untere (backward) Position, ab der ein Player plaziert werden darf")] [SerializeField]
+    private float bottomStartZPositionPlayer;
+
+    #endregion
+
     private EventManager eventManager;
     private GameState gameState;
 
+    /// <summary>
+    /// Wird von Unity aufgerufen, wenn die Komponente enabled wird
+    /// </summary>
     private void OnEnable()
     {
         eventManager = EventManager.Instance();
         gameState = GameState.Instance();
 
-        gameState.currentLevel = 1;
-        gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
+        EventManager.Instance().SecondTick += HandleSecondEvent;
+        EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
     }
 
     /// <summary>
@@ -182,22 +201,47 @@ public class GameMaster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.Instance().SecondTick += HandleSecondEvent;
-        EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
+        startNewGame();
+    }
+
+    /// <summary>
+    /// Startet ein neues Spiel vom Anfang an. Alle bis dahin gehaltene Werte gehen verloren.
+    /// </summary>
+    private void startNewGame()
+    {
+        gameState = GameState.Instance().reset();
+
+        gameState.currentLevel = 1;
+        gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
 
         startGameLevel();
     }
 
-    private void startGame()
-    {
-    }
-
+    /// <summary>
+    /// Beendet das aktuelle Spiel
+    /// </summary>
     private void endGame()
     {
     }
 
     /// <summary>
-    /// Startet das aktuell gesetzte Level 
+    /// Pausiert das aktuelle Spiel ohne Änderung an den Spielständen
+    /// </summary>
+    private void pauseGame()
+    {
+        //Pausensignal senden und in ... wechseln
+    }
+
+    /// <summary>
+    /// Führt das aktuelle Spiel auf Basis des aktuellen Standes weiter aus
+    /// </summary>
+    private void resumeGame()
+    {
+        //PausenEndesignal senden und zurück ins Spiel wechseln
+    }
+
+    /// <summary>
+    /// Startet das aktuell gesetzte Level mit den aktuell geltenden Einstellungen
     /// </summary>
     private void startGameLevel()
     {
@@ -209,6 +253,8 @@ public class GameMaster : MonoBehaviour
         EventManager.Instance().SendStartTimer();
 
         ProviderFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
+
+        GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
         // Debugausgabe
         string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
@@ -231,11 +277,21 @@ public class GameMaster : MonoBehaviour
     }
 
     /// <summary>
-    /// Beendet das aktuell gesetzte Level
+    /// Beendet das aktuell gesetzte Level. Beträgt der aktuelle Punktestand mehr als 0 Punkte, so
+    /// wird das nächste Level gespielt. Beträgt der aktuelle Punktestand gleich oder weniger als
+    /// 0 Punkte, so wird das vorherige Level aktiviert.
     /// </summary>
     private void finishCurrentGameLevel()
     {
         EventManager.Instance().SendKillSignalForProvider();
+        if (gameState.playerPoints < 0) // Das Level wurde verloren
+        {
+            runPreviousLevel();
+        }
+        else
+        {
+            runNextLevel();
+        }
     }
 
     /// <summary>
@@ -292,6 +348,7 @@ public class GameMaster : MonoBehaviour
             case CollisionObjektTyp.Ghost:
                 break;
             case CollisionObjektTyp.MainTarget:
+                finishCurrentGameLevel();
                 break;
         }
 
@@ -350,6 +407,8 @@ public class GameMaster : MonoBehaviour
     }
 
     #endregion
+
+    #region Hilfsfuktionen
 
     /// <summary>
     /// Gibt einen Zeitpunkt in Sekunden zurück. in der eine neue Wand erscheinen soll. Der Zeitpunkt befindet
@@ -424,4 +483,25 @@ public class GameMaster : MonoBehaviour
 
         return newProviderDimension;
     }
+
+    /// <summary>
+    /// Erzeugt auf Basis der anfänglichen Vorgaben und des aktuellen Levels einen neuen Record, der die minimalen
+    /// und maximalen Plazierung für den Player enthält .
+    /// </summary>
+    /// <param name="currentLevel">Das aktuelle Level</param>
+    /// <returns>Die zur Generierung zu verwendenen Rahmenangaben für den Player als PlayerDimension</returns>
+    private PlayerDimension getNewPlayerDimension(int currentLevel)
+    {
+        var getNewPlayerDimension = new PlayerDimension()
+        {
+            leftStartXPositionPlayer = leftStartXPositionPlayer,
+            topStartZPositionPlayer = topStartZPositionPlayer,
+            rightStartXPositionPlayer = rightStartXPositionPlayer,
+            bottomStartZPositionPlayer = bottomStartZPositionPlayer,
+        };
+
+        return getNewPlayerDimension;
+    }
+
+    #endregion
 }

@@ -303,7 +303,6 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: cebc12130326d9744a3f218c8f68b1de, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: 0db2c809a4a276c4bb0593b3ddf5fe65, type: 2}
   - {fileID: 7400000, guid: cebc12130326d9744a3f218c8f68b1de, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -365,3 +364,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
+  TargetTag: Player

@@ -5,6 +5,10 @@ using System.Security.Cryptography;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// Der ProviderMaker kapselt die Erstellung neuer Provider unter Berücksichtigung der
+/// übergebenen ProviderDimension.  
+/// </summary>
 public class ProviderMaker : MonoBehaviour
 {
     [Tooltip("Das Muster eines Providers für Lebenspunkte")] [SerializeField]
@@ -16,16 +20,13 @@ public class ProviderMaker : MonoBehaviour
     [Tooltip("Das Muster eines Providers für den Schutz vor Geistern")] [SerializeField]
     private GameObject GhostProtectionProvider;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+    [Tooltip("Das Muster des Targets für das Ende des Spiels")] [SerializeField]
+    private GameObject TargetProvider;
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
+    /// <summary>
+    /// Erzeugt alle Provider eines Levels
+    /// </summary>
+    /// <param name="providerDimension">Eine Instanz von ProviderDimensions</param>
     public void CreateProvider(ProviderDimension providerDimension)
     {
         var countOfLiveProvider = RandomNumberGenerator.GetInt32(
@@ -75,5 +76,23 @@ public class ProviderMaker : MonoBehaviour
             var newProvider = Instantiate(GoThroughProvider);
             newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
         }
+
+        CreateTargetProvider(providerDimension);
+    }
+
+    /// <summary>
+    /// Erzeugt einen neuen Target Provider
+    /// </summary>
+    /// <param name="providerDimension">Eine Instanz von ProviderDimensions</param>
+    public void CreateTargetProvider(ProviderDimension providerDimension)
+    {
+        float randomXFloatNumber = Random.Range(providerDimension.leftStartXPositionProvider,
+            providerDimension.rightStartXPositionProvider);
+
+        float randomZFloatNumber = Random.Range(providerDimension.bottomStartZPositionProvider,
+            providerDimension.topStartZPositionProvider);
+
+        var newProvider = Instantiate(TargetProvider);
+        newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
     }
 }

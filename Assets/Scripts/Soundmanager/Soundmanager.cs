@@ -20,8 +20,6 @@ public class SoundManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //PlayBackgroundMusic();
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

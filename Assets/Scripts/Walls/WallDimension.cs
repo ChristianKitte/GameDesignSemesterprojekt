@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Ein Record, der die Min und Max Werte definiert, zwischen denen ein Wall angelegt werden soll.
+/// Ein Record, der die Min und Max Werte definiert, zwischen denen die betreffenden Attribute
+/// angelegt werden sollen.
 /// </summary>
 public record WallDimension()
 {

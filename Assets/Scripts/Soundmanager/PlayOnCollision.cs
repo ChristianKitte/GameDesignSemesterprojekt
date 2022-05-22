@@ -11,11 +11,11 @@ public class PlayOnCollision : MonoBehaviour
     private AudioClip clip;
 
     [Tooltip("Spielt nur einen Sound, wenn das kollidierende GameObject den angegeben Tag hat")] [SerializeField]
-    private string filterTag = String.Empty;
+    private string TargetTag = "";
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (filterTag == String.Empty || collision.gameObject.CompareTag(this.filterTag))
+        if (TargetTag != "" && collision.gameObject.CompareTag(TargetTag))
         {
             SoundManager.Instance.PlayEffect(clip);
         }

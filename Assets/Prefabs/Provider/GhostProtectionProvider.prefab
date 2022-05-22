@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
+  TargetTag: Player
 --- !u!1 &4082514927436680263
 GameObject:
   m_ObjectHideFlags: 0
