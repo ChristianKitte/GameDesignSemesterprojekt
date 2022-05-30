@@ -1,14 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using TMPro;
 using UnityEngine;
-using Unity.UI;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Color = UnityEngine.Color;
-using Image = UnityEngine.UI.Image;
 
 public class SliderController : MonoBehaviour
 {
