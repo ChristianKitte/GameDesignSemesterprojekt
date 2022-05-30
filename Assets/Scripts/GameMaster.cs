@@ -17,6 +17,8 @@ public class GameMaster : MonoBehaviour
 {
     [SerializeField] private TMP_Text TextComponent;
 
+    [SerializeField] private SliderManager sliderManager;
+
     #region Einstellungen und Variablen
 
     [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
@@ -27,9 +29,6 @@ public class GameMaster : MonoBehaviour
 
     [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
     private GameObject ProviderFactory;
-
-    //public AudioSource audioSource;
-    //public AudioClip colliderClip;
 
     private int playedSecondsSinceStart;
 
@@ -205,11 +204,16 @@ public class GameMaster : MonoBehaviour
     }
 
     /// <summary>
-    /// Startet ein neues Spiel vom Anfang an. Alle bis dahin gehaltene Werte gehen verloren.
+    /// Startet ein neues Spiel vom Anfang an. Alle bis dahin gehaltene Werte gehen verloren. Der Spieler
+    /// erhält seinen anfänglich Bestand an Lebenspunkten
     /// </summary>
     private void startNewGame()
     {
         gameState = GameState.Instance().reset();
+        gameState.collectedLiveProviderPoints = 0;
+
+        sliderManager.GetLiveBar().SetBarMaximum(200);
+        sliderManager.GetLiveBar().SetCurrentValue(gameState.collectedLiveProviderPoints);
 
         gameState.currentLevel = 1;
         gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
@@ -245,35 +249,29 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void startGameLevel()
     {
-        // Shortcut - während der Entwicklung werden Einstellungen nicht auf Basis des Levels angepasst
+        // Hier fehlt noch die auf das aktuelle Level basierende Anpassung
 
-        gameState.remainingSecondsToPlayLevel = gameState.defaultSecondsToPlayPerLevel;
+        var secondsToPlay = gameState.defaultSecondsToPlayPerLevel;
+        gameState.remainingSecondsToPlayLevel = secondsToPlay;
 
-        EventManager.Instance().SendResetTimer(gameState.defaultSecondsToPlayPerLevel);
-        EventManager.Instance().SendStartTimer();
+        sliderManager.GetPlayTimeBar().SetBarMaximum(secondsToPlay);
+        sliderManager.GetPlayTimeBar().SetCurrentValue(secondsToPlay);
 
+        // GoThrough wird zurück gesetzt 
+        sliderManager.GetGoThroughBar().SetBarMaximum(0);
+        sliderManager.GetGoThroughBar().SetCurrentValue(0);
+
+        // GhostProtection wird zurück gesetzt
+        sliderManager.GetGhostProtectionBar().SetBarMaximum(0);
+        sliderManager.GetGoThroughBar().SetCurrentValue(0);
+
+        // Provider und Player auf das aktuelle Level anpassen - Aktuell wird currentLevel nicht ausgewertet
         ProviderFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
-
         GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
-        // Debugausgabe
-        string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
-        string playerGetPointString =
-            $"Der Spieler hat {gameState.collectedLiveProviderPoints.ToString()} Punkte gesammelt";
-        string playerGoThroughString =
-            $"Der Spieler hat {gameState.collectedGoThroughProviderSeconds} Sekunden zur Verfügung, um durch Wände zu gehen";
-        string playerGhostProtectionString =
-            $"Der Spieler hat {gameState.collectedGhostProtectionProviderSeconds} Sekunden zur Verfügung, in denen er vor Geister geschützt ist";
-
-        string ausgabe = playerPointString
-                         + System.Environment.NewLine
-                         + playerGetPointString
-                         + System.Environment.NewLine
-                         + playerGoThroughString
-                         + System.Environment.NewLine
-                         + playerGhostProtectionString;
-
-        TextComponent.SetText(ausgabe);
+        // Spiel starten
+        EventManager.Instance().SendResetTimer(secondsToPlay);
+        EventManager.Instance().SendStartTimer();
     }
 
     /// <summary>
@@ -284,7 +282,7 @@ public class GameMaster : MonoBehaviour
     private void finishCurrentGameLevel()
     {
         EventManager.Instance().SendKillSignalForProvider();
-        if (gameState.playerPoints < 0) // Das Level wurde verloren
+        if (gameState.collectedLiveProviderPoints < 0) // Das Level wurde verloren
         {
             runPreviousLevel();
         }
@@ -333,46 +331,49 @@ public class GameMaster : MonoBehaviour
         switch (collisionType)
         {
             case CollisionObjektTyp.LiveProvider:
-                gameState.playerPoints = gameState.playerPoints + value;
-                gameState.collectedLiveProviderPoints = gameState.collectedLiveProviderPoints + value;
+                sliderManager.GetLiveBar().CountUp(value);
+                gameState.collectedLiveProviderPoints = sliderManager.GetLiveBar().GetCurrentValue();
+
                 break;
             case CollisionObjektTyp.GoThroughProvider:
-                gameState.collectedGoThroughProviderSeconds = gameState.collectedLiveProviderPoints + value;
+                if (sliderManager.GetGoThroughBar().GetCurrentValue() < value)
+                {
+                    var newValue = value - sliderManager.GetGoThroughBar().GetCurrentValue();
+
+                    sliderManager.GetGoThroughBar().SetBarMaximum(newValue);
+                    sliderManager.GetGoThroughBar().SetCurrentValue(newValue);
+                }
+
+                gameState.collectedGoThroughProviderSeconds =
+                    sliderManager.GetGoThroughBar().GetCurrentValue();
+
                 break;
             case CollisionObjektTyp.GhostProtectionProvider:
-                gameState.collectedGhostProtectionProviderSeconds = gameState.collectedLiveProviderPoints + value;
+                if (sliderManager.GetGhostProtectionBar().GetCurrentValue() < value)
+                {
+                    var newValue = value - sliderManager.GetGhostProtectionBar().GetCurrentValue();
+
+                    sliderManager.GetGhostProtectionBar().SetBarMaximum(newValue);
+                    sliderManager.GetGhostProtectionBar().SetCurrentValue(newValue);
+                }
+
+                gameState.collectedGhostProtectionProviderSeconds =
+                    sliderManager.GetGhostProtectionBar().GetCurrentValue();
+
                 break;
             case CollisionObjektTyp.MovingWall:
-                gameState.playerPoints = gameState.playerPoints - value;
+                sliderManager.GetLiveBar().CountDown(value);
+                gameState.collectedLiveProviderPoints = sliderManager.GetLiveBar().GetCurrentValue();
+
                 break;
             case CollisionObjektTyp.Ghost:
+
                 break;
             case CollisionObjektTyp.MainTarget:
                 finishCurrentGameLevel();
+
                 break;
         }
-
-        // Debugausgabe
-        string playerLevelString = $"Aktueller Level: {gameState.currentLevel.ToString()}";
-        string playerPointString = $"Aktueller Punktestand: {gameState.playerPoints.ToString()} Punkte";
-        string playerGetPointString =
-            $"Der Spieler hat {gameState.collectedLiveProviderPoints.ToString()} Punkte gesammelt";
-        string playerGoThroughString =
-            $"Der Spieler hat {gameState.collectedGoThroughProviderSeconds} Sekunden zur Verfügung, um durch Wände zu gehen";
-        string playerGhostProtectionString =
-            $"Der Spieler hat {gameState.collectedGhostProtectionProviderSeconds} Sekunden zur Verfügung, in denen er vor Geister geschützt ist";
-
-        string ausgabe = playerLevelString
-                         + System.Environment.NewLine
-                         + playerPointString
-                         + System.Environment.NewLine
-                         + playerGetPointString
-                         + System.Environment.NewLine
-                         + playerGoThroughString
-                         + System.Environment.NewLine
-                         + playerGhostProtectionString;
-
-        TextComponent.SetText(ausgabe);
     }
 
     /// <summary>
@@ -380,40 +381,47 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void HandleSecondEvent()
     {
+        // Bar Anzeigen aktualisieren
         gameState.remainingSecondsToPlayLevel--;
+        sliderManager.GetPlayTimeBar().CountDown(1, false);
 
+        if (sliderManager.GetGhostProtectionBar().GetCurrentValue() > 0)
+        {
+            sliderManager.GetGhostProtectionBar().CountDown(1);
+            gameState.collectedGhostProtectionProviderSeconds =
+                sliderManager.GetGhostProtectionBar().GetCurrentValue();
+        }
+
+        if (sliderManager.GetGoThroughBar().GetCurrentValue() > 0)
+        {
+            sliderManager.GetGoThroughBar().CountDown(1);
+            gameState.collectedGoThroughProviderSeconds =
+                sliderManager.GetGoThroughBar().GetCurrentValue();
+        }
+
+        // Spiel beenden oder verbleibende Spielzeit aktualisieren
+        if (gameState.remainingSecondsToPlayLevel <= 0)
+        {
+            finishCurrentGameLevel();
+        }
+        else
+        {
+            TimeSpan restzeit = TimeSpan.FromSeconds(gameState.remainingSecondsToPlayLevel);
+            sliderManager.GetPlayTimeBar().SetValueText(
+                $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}");
+        }
+
+        // Wände erzeugen
         int curWallIntervall = getNewWallIntervall(gameState.currentLevel);
         for (int i = 0; i < curWallIntervall; i++)
         {
             WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
         }
-
-        // Wird betreten, wenn die maximale Spielzeit des Levels erreicht ist. In diesen Fall endet
-        // das Level und der Spieler wird um ein Level zurück gesetzt.
-        //
-        // Ist vielleicht eleganter über ein Timer Event zu lösen
-        if (gameState.remainingSecondsToPlayLevel <= 0)
-        {
-            // Um einen Level zurück setzen
-            //runPreviousLevel();
-
-            // for debug purposes
-            finishCurrentGameLevel();
-        }
-        else
-        {
-            
-            
-            TimeSpan restzeit = TimeSpan.FromSeconds(
-                gameState.defaultSecondsToPlayPerLevel - gameState.remainingSecondsToPlayLevel);
-            
-            currentTimeText = $"{restzeit.Minutes.ToString()}:{restzeit.Seconds.ToString()}";
-        }
     }
 
     #endregion
 
-    #region Hilfsfuktionen
+    #region Hilfsfunktionen
 
     /// <summary>
     /// Gibt einen Zeitpunkt in Sekunden zurück. in der eine neue Wand erscheinen soll. Der Zeitpunkt befindet

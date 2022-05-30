@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody _rigidboy = null;
 
-    [SerializeField] private PlayerInput _input;
+    [FormerlySerializedAs("_input")] [SerializeField] private PlayerInput2 input2;
 
     private Vector3 _playerMoveInput = Vector3.zero;
 
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 GetMoveInput()
     {
-        return new Vector3(_input.MoveInput.x, 0.0f, _input.MoveInput.y);
+        return new Vector3(input2.MoveInput.x, 0.0f, input2.MoveInput.y);
     }
 
     private void PlayerMove()
@@ -57,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         _previousPlayerLookInput = _playerLookInput;
         _playerLookInput = new Vector3(
-            _input.LookInput.x, (_input.InvertMouseY ? -_input.LookInput.y : _input.LookInput.y), 0.0f);
+            input2.LookInput.x, (input2.InvertMouseY ? -input2.LookInput.y : input2.LookInput.y), 0.0f);
 
         // Lerp kann für eine sanfte Bewegung sorgen, indem er zwischen zwei Punkten und einer Zeit interpoliert
         return Vector3.Lerp(
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour
     private void PitchCamera()
     {
         _cameraPitch += _playerLookInput.y * _pitchSpeedMultiplier;
-        _cameraPitch = Mathf.Clamp(_cameraPitch, -4.0f, 89.9f);
+        _cameraPitch = Mathf.Clamp(_cameraPitch, -4.0f, 45.0f);
 
         CameraFollow.rotation = Quaternion.Euler(
             _cameraPitch, CameraFollow.eulerAngles.y, CameraFollow.eulerAngles.z);

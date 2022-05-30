@@ -56,7 +56,7 @@ public class GameState
     /// <summary>
     /// Der aktuelle Punktestand des Spielers
     /// </summary>
-    public int playerPoints { get; set; } = 0;
+    //public int playerPoints { get; set; } = 0;
 
     /// <summary>
     /// Restliche Sekunden für GhostProtection
