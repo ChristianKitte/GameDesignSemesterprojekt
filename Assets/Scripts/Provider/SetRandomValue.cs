@@ -27,13 +27,27 @@ public class SetRandomValue : MonoBehaviour
     /// <summary>
     /// Der aktuelle Wert
     /// </summary>
-    public int CurrentValue { get; private set; } = 0;
+    public int CurrentValue { get; set; } = 0;
 
     void Start()
     {
-        var livePoint = RandomNumberGenerator.GetInt32(MinValue, MaxValue + 1);
-        TextComponent.SetText(livePoint.ToString());
+        SetRandomNumber(MinValue, MaxValue);
+    }
 
-        CurrentValue = livePoint;
+    /// <summary>
+    /// Wählt eine zufällige Nummer zwischen den übergebenen Werten (inkl.), hält diese vor
+    /// und bring sie in der Textkomponente des Eltern GameObjects zu Anzeige
+    /// </summary>
+    /// <param name="MinValue"></param>
+    /// <param name="MaxValue"></param>
+    public void SetRandomNumber(int MinValue, int MaxValue)
+    {
+        this.MinValue = MinValue;
+        this.MaxValue = MaxValue;
+
+        var rndNumber = RandomNumberGenerator.GetInt32(MinValue, MaxValue + 1);
+        TextComponent.SetText(rndNumber.ToString());
+
+        CurrentValue = rndNumber;
     }
 }

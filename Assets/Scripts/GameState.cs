@@ -54,24 +54,19 @@ public class GameState
     public int currentLevel { get; set; } = 0;
 
     /// <summary>
-    /// Der aktuelle Punktestand des Spielers
-    /// </summary>
-    //public int playerPoints { get; set; } = 0;
-
-    /// <summary>
     /// Restliche Sekunden für GhostProtection
     /// </summary>
     public int remainingSecondsGhostProtectionProvider { get; set; } = 0;
 
     /// <summary>
-    /// Restliche Sekunden für GoThrough
+    /// Restliche Sekunden für WallProtection
     /// </summary>
-    public int remainingSecondsGoThroughProvider { get; set; } = 0;
+    public int remainingSecondsWallProtectionProvider { get; set; } = 0;
 
     /// <summary>
-    /// Alle bisher gesammelten Punkte des LiveProviders 
+    /// Alle bisher gesammelte Bananen des BananaProviders 
     /// </summary>
-    public int collectedLiveProviderPoints { get; set; } = 0;
+    public int collectedBananaProviderBanana { get; set; } = 0;
 
     /// <summary>
     /// Alle bisher gesammelten Sekunden des GhostProtectionProviders
@@ -81,5 +76,5 @@ public class GameState
     /// <summary>
     /// Alle bisher gesammelten Sekunden des GoThroughProviders
     /// </summary>
-    public int collectedGoThroughProviderSeconds { get; set; } = 0;
+    public int collectedWallProtectionProviderSeconds { get; set; } = 0;
 }

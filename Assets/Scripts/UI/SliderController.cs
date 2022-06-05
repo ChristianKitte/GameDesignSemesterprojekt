@@ -49,7 +49,7 @@ public class SliderController : MonoBehaviour
         {
             slider.value = this.minimum;
         }
-        else if (slider.value - value > this.maximum)
+        else if ((slider.value - value) > this.maximum)
         {
             slider.value = this.maximum;
         }
@@ -59,7 +59,7 @@ public class SliderController : MonoBehaviour
         }
 
         // Steuerung realer Wert
-        this.currentValue = this.currentValue - 1;
+        this.currentValue = this.currentValue - value;
         if (refreshValueText)
         {
             SetValueText(this.currentValue.ToString());

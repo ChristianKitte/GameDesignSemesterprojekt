@@ -11,14 +11,14 @@ namespace Game.Enumerations
         DefaultValue = 0,
 
         /// <summary>
-        /// Objekt ist ein LiveProvider
+        /// Objekt ist ein BananaProvider
         /// </summary>
-        LiveProvider = 1,
+        BananaProvider = 1,
 
         /// <summary>
-        /// Objekt ist ein GoThroughProvider
+        /// Objekt ist ein WallProtectionProvider
         /// </summary>
-        GoThroughProvider = 2,
+        WallProtectionProvider = 2,
 
         /// <summary>
         /// Objekt ist ein GhostProtectionProvider

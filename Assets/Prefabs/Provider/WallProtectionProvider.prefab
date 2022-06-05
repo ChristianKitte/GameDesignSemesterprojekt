@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 6897855420677922608}
   - component: {fileID: 6491581791359755008}
   m_Layer: 6
-  m_Name: GoThroughProvider
+  m_Name: WallProtectionProvider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

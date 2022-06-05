@@ -15,20 +15,21 @@ using TMPro;
 /// </summary>
 public class GameMaster : MonoBehaviour
 {
-    [SerializeField] private TMP_Text TextComponent;
-
-    [SerializeField] private SliderManager sliderManager;
-
     #region Einstellungen und Variablen
+
+    [SerializeField] private TMP_Text TextComponent;
 
     [Tooltip("Rundenzeit in Sekunden")] [SerializeField]
     private int TimePerRoundInSeconds;
 
-    [Tooltip("Die zu verwendende WallFactory")] [SerializeField]
-    private GameObject WallFactory;
+    [Tooltip("Der zu verwendende SliderManager")] [SerializeField]
+    private SliderManager sliderManager;
 
-    [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
-    private GameObject ProviderFactory;
+    [Tooltip("Die zu verwendende WallFactory")] [SerializeField]
+    private GameObject wallFactory;
+
+    [FormerlySerializedAs("ProviderFactory")] [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
+    private GameObject providerFactory;
 
     private int playedSecondsSinceStart;
 
@@ -104,24 +105,6 @@ public class GameMaster : MonoBehaviour
 
     #region Einstellungen für ProviderDimension
 
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an LiveProvider")] [SerializeField]
-    private int MinCountLiveProvider;
-
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an LiveProvider")] [SerializeField]
-    private int MaxCountLiveProvider;
-
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an GhostProtectionProvider")] [SerializeField]
-    private int MinCountGhostProtectionProvider;
-
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an GhostProtectionProvider")] [SerializeField]
-    private int MaxCountGhostProtectionProvider;
-
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an GoThroughProvider")] [SerializeField]
-    private int MinCountGoThroughProvider;
-
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an GoThroughProvider")] [SerializeField]
-    private int MaxCountGoThroughProvider;
-
     [Tooltip("Die linke Position, ab der ein Provider plaziert werden darf")] [SerializeField]
     private float leftStartXPositionProvider;
 
@@ -134,23 +117,53 @@ public class GameMaster : MonoBehaviour
     [Tooltip("Die untere (backward) Position, ab der ein Provider plaziert werden darf")] [SerializeField]
     private float bottomStartZPositionProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für LiveProvider")] [SerializeField]
-    private int MinValueLiveProvider;
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an BananaProvider")] [SerializeField]
+    private int MinCountBananaProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für LiveProvider")] [SerializeField]
-    private int MaxValueLiveProvider;
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an BananaProvider")] [SerializeField]
+    private int MaxCountBananaProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für GhostProtectionProvider")] [SerializeField]
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an GhostProtectionProvider")] [SerializeField]
+    private int MinCountGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an GhostProtectionProvider")] [SerializeField]
+    private int MaxCountGhostProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an WallProtetionProvider")] [SerializeField]
+    private int MinCountWallProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an WallProtectionProvider")] [SerializeField]
+    private int MaxCountWallProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an NPCGhost im Spiel")] [SerializeField]
+    private int MinCountNPCGhostProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an NPCGhost im Spiel")] [SerializeField]
+    private int MaxCountNPCGhostProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Bananen für BananaProvider")] [SerializeField]
+    private int MinValueBananaProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Bananen für BananaProvider")] [SerializeField]
+    private int MaxValueBananaProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Sekunden für GhostProtectionProvider")] [SerializeField]
     private int MinValueGhostProtectionProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für GhostProtectionProvider")] [SerializeField]
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Sekunden für GhostProtectionProvider")] [SerializeField]
     private int MaxValueGhostProtectionProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Punkten für GoThroughProvider")] [SerializeField]
-    private int MinValueGoThroughProvider;
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Sekunden für WallProtectionProvider")] [SerializeField]
+    private int MinValueWallProtectionProvider;
 
-    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Punkten für GoThroughProvider")] [SerializeField]
-    private int MaxValueGoThroughProvider;
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Sekunden für WallProtectionProvider")] [SerializeField]
+    private int MaxValueWallProtectionProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die minimale Anzahl an Sekunden für WallProtectionProvider")] [SerializeField]
+    private int MinValueNPCGhostProvider;
+
+    [Tooltip("Referenzwert in Level1 - Die maximale Anzahl an Sekunden für WallProtectionProvider")] [SerializeField]
+    private int MaxValueNPCGhostProvider;
 
     #endregion
 
@@ -170,7 +183,6 @@ public class GameMaster : MonoBehaviour
 
     #endregion
 
-    private EventManager eventManager;
     private GameState gameState;
 
     /// <summary>
@@ -178,7 +190,6 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        eventManager = EventManager.Instance();
         gameState = GameState.Instance();
 
         EventManager.Instance().SecondTick += HandleSecondEvent;
@@ -190,7 +201,6 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        eventManager = null;
         gameState = null;
 
         EventManager.Instance().SecondTick -= HandleSecondEvent;
@@ -210,13 +220,12 @@ public class GameMaster : MonoBehaviour
     private void startNewGame()
     {
         gameState = GameState.Instance().reset();
-        gameState.collectedLiveProviderPoints = 0;
-
-        sliderManager.GetLiveBar().SetBarMaximum(200);
-        sliderManager.GetLiveBar().SetCurrentValue(gameState.collectedLiveProviderPoints);
 
         gameState.currentLevel = 1;
+        gameState.collectedBananaProviderBanana = 0;
         gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
+
+        sliderManager.GetBananaBar().SetCurrentValue(gameState.collectedBananaProviderBanana);
 
         startGameLevel();
     }
@@ -257,16 +266,16 @@ public class GameMaster : MonoBehaviour
         sliderManager.GetPlayTimeBar().SetBarMaximum(secondsToPlay);
         sliderManager.GetPlayTimeBar().SetCurrentValue(secondsToPlay);
 
-        // GoThrough wird zurück gesetzt 
-        sliderManager.GetGoThroughBar().SetBarMaximum(0);
-        sliderManager.GetGoThroughBar().SetCurrentValue(0);
+        // WallProtection wird zurück gesetzt 
+        sliderManager.GetWallProtectionBar().SetBarMaximum(0);
+        sliderManager.GetWallProtectionBar().SetCurrentValue(0);
 
         // GhostProtection wird zurück gesetzt
         sliderManager.GetGhostProtectionBar().SetBarMaximum(0);
-        sliderManager.GetGoThroughBar().SetCurrentValue(0);
+        sliderManager.GetGhostProtectionBar().SetCurrentValue(0);
 
         // Provider und Player auf das aktuelle Level anpassen - Aktuell wird currentLevel nicht ausgewertet
-        ProviderFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
+        providerFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
         GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
         // Spiel starten
@@ -282,7 +291,7 @@ public class GameMaster : MonoBehaviour
     private void finishCurrentGameLevel()
     {
         EventManager.Instance().SendKillSignalForProvider();
-        if (gameState.collectedLiveProviderPoints < 0) // Das Level wurde verloren
+        if (gameState.collectedBananaProviderBanana < 0) // Das Level wurde verloren
         {
             runPreviousLevel();
         }
@@ -330,22 +339,22 @@ public class GameMaster : MonoBehaviour
     {
         switch (collisionType)
         {
-            case CollisionObjektTyp.LiveProvider:
-                sliderManager.GetLiveBar().CountUp(value);
-                gameState.collectedLiveProviderPoints = sliderManager.GetLiveBar().GetCurrentValue();
+            case CollisionObjektTyp.BananaProvider:
+                sliderManager.GetBananaBar().CountUp(value);
+                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
 
                 break;
-            case CollisionObjektTyp.GoThroughProvider:
-                if (sliderManager.GetGoThroughBar().GetCurrentValue() < value)
+            case CollisionObjektTyp.WallProtectionProvider:
+                if (sliderManager.GetWallProtectionBar().GetCurrentValue() < value)
                 {
-                    var newValue = value - sliderManager.GetGoThroughBar().GetCurrentValue();
+                    var newValue = value - sliderManager.GetWallProtectionBar().GetCurrentValue();
 
-                    sliderManager.GetGoThroughBar().SetBarMaximum(newValue);
-                    sliderManager.GetGoThroughBar().SetCurrentValue(newValue);
+                    sliderManager.GetWallProtectionBar().SetBarMaximum(newValue);
+                    sliderManager.GetWallProtectionBar().SetCurrentValue(newValue);
                 }
 
-                gameState.collectedGoThroughProviderSeconds =
-                    sliderManager.GetGoThroughBar().GetCurrentValue();
+                gameState.collectedWallProtectionProviderSeconds =
+                    sliderManager.GetWallProtectionBar().GetCurrentValue();
 
                 break;
             case CollisionObjektTyp.GhostProtectionProvider:
@@ -362,11 +371,13 @@ public class GameMaster : MonoBehaviour
 
                 break;
             case CollisionObjektTyp.MovingWall:
-                sliderManager.GetLiveBar().CountDown(value);
-                gameState.collectedLiveProviderPoints = sliderManager.GetLiveBar().GetCurrentValue();
+                sliderManager.GetBananaBar().CountDown(value);
+                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
 
                 break;
             case CollisionObjektTyp.Ghost:
+                sliderManager.GetBananaBar().CountDown(value);
+                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
 
                 break;
             case CollisionObjektTyp.MainTarget:
@@ -392,11 +403,11 @@ public class GameMaster : MonoBehaviour
                 sliderManager.GetGhostProtectionBar().GetCurrentValue();
         }
 
-        if (sliderManager.GetGoThroughBar().GetCurrentValue() > 0)
+        if (sliderManager.GetWallProtectionBar().GetCurrentValue() > 0)
         {
-            sliderManager.GetGoThroughBar().CountDown(1);
-            gameState.collectedGoThroughProviderSeconds =
-                sliderManager.GetGoThroughBar().GetCurrentValue();
+            sliderManager.GetWallProtectionBar().CountDown(1);
+            gameState.collectedWallProtectionProviderSeconds =
+                sliderManager.GetWallProtectionBar().GetCurrentValue();
         }
 
         // Spiel beenden oder verbleibende Spielzeit aktualisieren
@@ -415,7 +426,7 @@ public class GameMaster : MonoBehaviour
         int curWallIntervall = getNewWallIntervall(gameState.currentLevel);
         for (int i = 0; i < curWallIntervall; i++)
         {
-            WallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
+            wallFactory.GetComponent<WallMaker>().createWall(getNewWallDimension(currentLevel));
         }
     }
 
@@ -476,22 +487,26 @@ public class GameMaster : MonoBehaviour
     {
         var newProviderDimension = new ProviderDimension()
         {
-            MinCountLiveProvider = MinCountLiveProvider,
-            MaxCountLiveProvider = MaxCountLiveProvider,
+            MinCountBananaProvider = MinCountBananaProvider,
+            MaxCountBananaProvider = MaxCountBananaProvider,
             MinCountGhostProtectionProvider = MinCountGhostProtectionProvider,
             MaxCountGhostProtectionProvider = MaxCountGhostProtectionProvider,
-            MinCountGoThroughProvider = MinCountGoThroughProvider,
-            MaxCountGoThroughProvider = MaxCountGoThroughProvider,
+            MinCountWallProtectionProvider = MinCountWallProtectionProvider,
+            MaxCountWallProtectionProvider = MaxCountWallProtectionProvider,
+            MinCountNPCGhostProvider = MinCountNPCGhostProvider,
+            MaxCountNPCGhostProvider = MaxCountNPCGhostProvider,
             leftStartXPositionProvider = leftStartXPositionProvider,
             topStartZPositionProvider = topStartZPositionProvider,
             rightStartXPositionProvider = rightStartXPositionProvider,
             bottomStartZPositionProvider = bottomStartZPositionProvider,
-            MinValueLiveProvider = MinValueLiveProvider,
-            MaxValueLiveProvider = MaxValueLiveProvider,
+            MinValueBananaProvider = MinValueBananaProvider,
+            MaxValueBananaProvider = MaxValueBananaProvider,
             MinValueGhostProtectionProvider = MinValueGhostProtectionProvider,
             MaxValueGhostProtectionProvider = MaxValueGhostProtectionProvider,
-            MinValueGoThroughProvider = MinValueGoThroughProvider,
-            MaxValueGoThroughProvider = MaxValueGoThroughProvider
+            MinValueWallProtectionProvider = MinValueWallProtectionProvider,
+            MaxValueWallProtectionProvider = MaxValueWallProtectionProvider,
+            MinValueNPCGhostProvider = MinValueNPCGhostProvider,
+            MaxValueNPCGhostProvider = MaxValueNPCGhostProvider
         };
 
         return newProviderDimension;

@@ -11,12 +11,12 @@ public record ProviderDimension()
     /// <summary>
     /// Die minimale Anzahl an LiveProvider
     /// </summary>
-    public int MinCountLiveProvider { get; set; }
+    public int MinCountBananaProvider { get; set; }
 
     /// <summary>
     /// Die maximale Anzahl an LiveProvider
     /// </summary>
-    public int MaxCountLiveProvider { get; set; }
+    public int MaxCountBananaProvider { get; set; }
 
     /// <summary>
     /// Die minimale Anzahl an GhostProtectionProvider
@@ -29,14 +29,24 @@ public record ProviderDimension()
     public int MaxCountGhostProtectionProvider { get; set; }
 
     /// <summary>
-    /// Die minimale Anzahl an GoThroughProvider
+    /// Die minimale Anzahl an WallProtectionProvider
     /// </summary>
-    public int MinCountGoThroughProvider { get; set; }
+    public int MinCountWallProtectionProvider { get; set; }
 
     /// <summary>
-    /// Die maximale Anzahl an GoThroughProvider
+    /// Die maximale Anzahl an WallProtectionProvider
     /// </summary>
-    public int MaxCountGoThroughProvider { get; set; }
+    public int MaxCountWallProtectionProvider { get; set; }
+
+    /// <summary>
+    /// Die minimale Anzahl an WallProtectionProvider
+    /// </summary>
+    public int MinCountNPCGhostProvider { get; set; }
+
+    /// <summary>
+    /// Die maximale Anzahl an WallProtectionProvider
+    /// </summary>
+    public int MaxCountNPCGhostProvider { get; set; }
 
     /// <summary>
     /// Die linke Position, ab der ein Provider plaziert werden darf
@@ -59,14 +69,14 @@ public record ProviderDimension()
     public float bottomStartZPositionProvider { get; set; }
 
     /// <summary>
-    /// Die minimale Anzahl an Punkten für LiveProvider
+    /// Die minimale Anzahl an Bananen für BananaProvider
     /// </summary>
-    public int MinValueLiveProvider { get; set; }
+    public int MinValueBananaProvider { get; set; }
 
     /// <summary>
-    /// Die maximale Anzahl an Punkten für LiveProvider
+    /// Die maximale Anzahl an Bananen für BananaProvider
     /// </summary>
-    public int MaxValueLiveProvider { get; set; }
+    public int MaxValueBananaProvider { get; set; }
 
     /// <summary>
     /// Die minimale Anzahl an Punkten für GhostProtectionProvider
@@ -79,12 +89,22 @@ public record ProviderDimension()
     public int MaxValueGhostProtectionProvider { get; set; }
 
     /// <summary>
-    /// Die minimale Anzahl an Punkten für GoThroughProvider
+    /// Die minimale Anzahl an Punkten für WallProtectionProvider
     /// </summary>
-    public int MinValueGoThroughProvider { get; set; }
+    public int MinValueWallProtectionProvider { get; set; }
 
     /// <summary>
-    /// Die maximale Anzahl an Punkten für GoThroughProvider
+    /// Die maximale Anzahl an Punkten für WallProtectionProvider
     /// </summary>
-    public int MaxValueGoThroughProvider { get; set; }
+    public int MaxValueWallProtectionProvider { get; set; }
+
+    /// <summary>
+    /// Die minimale Anzahl an Bananen für NPCGhost
+    /// </summary>
+    public int MinValueNPCGhostProvider { get; set; }
+
+    /// <summary>
+    /// Die maximale Anzahl an Bananen für NPCGhost
+    /// </summary>
+    public int MaxValueNPCGhostProvider { get; set; }
 }

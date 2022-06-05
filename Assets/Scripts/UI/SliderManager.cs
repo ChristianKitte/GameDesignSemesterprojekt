@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SliderManager : MonoBehaviour
 {
-    [Tooltip("Der verwendete Slider zur Anzeige des Live Wertes")] [SerializeField]
-    private GameObject liveBar;
+    [Tooltip("Der verwendete Slider zur Anzeige des Banana Wertes")] [SerializeField]
+    private GameObject bananaBar;
 
-    [Tooltip("Der verwendete Slider zur Anzeige des GoThrough Wertes")] [SerializeField]
-    private GameObject goThroughBar;
+    [Tooltip("Der verwendete Slider zur Anzeige des WallProtection Wertes")] [SerializeField]
+    private GameObject wallProtectionBar;
 
     [Tooltip("Der verwendete Slider zur Anzeige des GhostProtection Wertes")] [SerializeField]
     private GameObject ghostProtectionBar;
@@ -17,27 +18,27 @@ public class SliderManager : MonoBehaviour
     [Tooltip("Der verwendete Slider zur Anzeige der verbleibenden Spielzeit")] [SerializeField]
     private GameObject playTimeBar;
 
-    private SliderController liveBarSlider;
-    private SliderController goThroughBarSlider;
+    private SliderController bananaBarSlider;
+    private SliderController wallProtectionBarSlider;
     private SliderController ghostProtectionBarSlider;
     private SliderController playTimeBarSlider;
 
     private void Awake()
     {
-        liveBarSlider = liveBar.GetComponent<SliderController>();
-        goThroughBarSlider = goThroughBar.GetComponent<SliderController>();
+        bananaBarSlider = bananaBar.GetComponent<SliderController>();
+        wallProtectionBarSlider = wallProtectionBar.GetComponent<SliderController>();
         ghostProtectionBarSlider = ghostProtectionBar.GetComponent<SliderController>();
         playTimeBarSlider = playTimeBar.GetComponent<SliderController>();
     }
 
-    public SliderController GetLiveBar()
+    public SliderController GetBananaBar()
     {
-        return liveBarSlider;
+        return bananaBarSlider;
     }
 
-    public SliderController GetGoThroughBar()
+    public SliderController GetWallProtectionBar()
     {
-        return goThroughBarSlider;
+        return wallProtectionBarSlider;
     }
 
     public SliderController GetGhostProtectionBar()
