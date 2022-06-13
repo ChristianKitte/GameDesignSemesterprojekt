@@ -9,6 +9,6 @@ public class PlayOnStart : MonoBehaviour
 {
     private void Start()
     {
-        SoundManager.Instance.PlayBackgroundMusic();
+        SoundManager.Instance.PlayMenueMusic();
     }
 }

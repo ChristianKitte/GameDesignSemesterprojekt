@@ -15,6 +15,9 @@ public class SoundManager : MonoBehaviour
     [Tooltip("Eine AudioSource, die zum Abspielen von Musik als Hintergrund verwendet werden soll")] [SerializeField]
     private AudioSource backgroundPlayer;
 
+    [Tooltip("Eine AudioSource, die zum Abspielen von Musik als Hintergrund verwendet werden soll")] [SerializeField]
+    private AudioSource menuPlayer;
+
     private void Awake()
     {
         if (Instance == null)
@@ -35,5 +38,12 @@ public class SoundManager : MonoBehaviour
     public void PlayBackgroundMusic()
     {
         backgroundPlayer.Play();
+        menuPlayer.Stop();
+    }
+
+    public void PlayMenueMusic()
+    {
+        backgroundPlayer.Stop();
+        menuPlayer.Play();
     }
 }

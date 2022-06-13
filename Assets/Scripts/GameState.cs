@@ -14,6 +14,7 @@ public class GameState
     /// </summary>
     private static GameState _gameState;
 
+
     /// <summary>
     /// Liefert eine Instanz der Klasse GameState zurück
     /// </summary>
@@ -29,7 +30,7 @@ public class GameState
     }
 
     /// <summary>
-    /// Setzt die Singleton Intanz zurück auf ihren Anfangswert
+    /// Setzt die Singleton Instanz zurück auf ihren Anfangswert
     /// </summary>
     /// <returns>Die Instanz von GameState</returns>
     public GameState reset()
@@ -37,6 +38,16 @@ public class GameState
         _gameState = new GameState();
         return _gameState;
     }
+
+    /// <summary>
+    /// True, wenn das Spiel gestartet wurde, ansonsten false
+    /// </summary>
+    public bool GameIsPlaying { get; set; }
+
+    /// <summary>
+    /// True, wenn die Spiel pausiert, ansonsten false
+    /// </summary>
+    public bool GameIsPaused { get; set; }
 
     /// <summary>
     /// Die Zeit in Sekunden eines Levels

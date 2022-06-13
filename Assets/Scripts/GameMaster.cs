@@ -194,6 +194,7 @@ public class GameMaster : MonoBehaviour
 
         EventManager.Instance().SecondTick += HandleSecondEvent;
         EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
+        EventManager.Instance().StartNewGameEvent += startNewGame;
     }
 
     /// <summary>
@@ -205,12 +206,13 @@ public class GameMaster : MonoBehaviour
 
         EventManager.Instance().SecondTick -= HandleSecondEvent;
         EventManager.Instance().CollisionDetected -= HandleCollisionDetectedEvent;
+        EventManager.Instance().StartNewGameEvent -= startNewGame;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        startNewGame();
+        //startNewGame();
     }
 
     /// <summary>
@@ -219,8 +221,13 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void startNewGame()
     {
+        EventManager.Instance().StartGamePlay();
+        
         gameState = GameState.Instance().reset();
 
+        gameState.GameIsPlaying=true;
+        gameState.GameIsPaused = false;
+        
         gameState.currentLevel = 1;
         gameState.collectedBananaProviderBanana = 0;
         gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
@@ -228,29 +235,6 @@ public class GameMaster : MonoBehaviour
         sliderManager.GetBananaBar().SetCurrentValue(gameState.collectedBananaProviderBanana);
 
         startGameLevel();
-    }
-
-    /// <summary>
-    /// Beendet das aktuelle Spiel
-    /// </summary>
-    private void endGame()
-    {
-    }
-
-    /// <summary>
-    /// Pausiert das aktuelle Spiel ohne Änderung an den Spielständen
-    /// </summary>
-    private void pauseGame()
-    {
-        //Pausensignal senden und in ... wechseln
-    }
-
-    /// <summary>
-    /// Führt das aktuelle Spiel auf Basis des aktuellen Standes weiter aus
-    /// </summary>
-    private void resumeGame()
-    {
-        //PausenEndesignal senden und zurück ins Spiel wechseln
     }
 
     /// <summary>
@@ -290,7 +274,6 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void finishCurrentGameLevel()
     {
-        EventManager.Instance().SendKillSignalForProvider();
         if (gameState.collectedBananaProviderBanana < 0) // Das Level wurde verloren
         {
             runPreviousLevel();

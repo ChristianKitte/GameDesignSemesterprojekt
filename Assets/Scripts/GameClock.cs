@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Kann wahrscheinlich weg....
+/// Berechnet die Zeit und wirft bei Wechsel der Sekunde ein Event vom
+/// Typ EventManager.Instance().SendSecondTick() 
 /// </summary>
 public class GameClock : MonoBehaviour
 {
@@ -16,15 +17,17 @@ public class GameClock : MonoBehaviour
     private void Start()
     {
         EventManager.Instance().ResetTimer += ResetTimer;
-        EventManager.Instance().PauseTimer += PauseTimer;
         EventManager.Instance().StartTimer += StartTimer;
+        EventManager.Instance().PauseGamePlayCallEvent += PauseTimer;
+        EventManager.Instance().ResumeGamePlayCallEvent += ResumeTimer;
     }
 
     private void OnDisable()
     {
         EventManager.Instance().ResetTimer -= ResetTimer;
-        EventManager.Instance().PauseTimer -= PauseTimer;
         EventManager.Instance().StartTimer -= StartTimer;
+        EventManager.Instance().PauseGamePlayCallEvent -= PauseTimer;
+        EventManager.Instance().ResumeGamePlayCallEvent -= ResumeTimer;
     }
 
     // Update is called once per frame
@@ -43,19 +46,39 @@ public class GameClock : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hält die Zählung an und setzt alle Werte auf den Urspung zurück
+    /// </summary>
+    /// <param name="newStartTimeInSeconds">Wird nicht verwendet</param>
     void ResetTimer(int newStartTimeInSeconds)
     {
+        timerIsActive = false;
+
         currentTime = 0;
         currentSecondsNew = 0;
         currentSecondsOld = 0;
     }
 
+    /// <summary>
+    /// Startet den Timer
+    /// </summary>
+    void StartTimer()
+    {
+        timerIsActive = true;
+    }
+
+    /// <summary>
+    /// Hält die Zählung an
+    /// </summary>
     void PauseTimer()
     {
         timerIsActive = false;
     }
 
-    void StartTimer()
+    /// <summary>
+    /// Führt die Zählung weiter
+    /// </summary>
+    void ResumeTimer()
     {
         timerIsActive = true;
     }

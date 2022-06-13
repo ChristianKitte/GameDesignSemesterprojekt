@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Timer : MonoBehaviour
+public class Timer_ : MonoBehaviour
 {
     [SerializeField] private int TimeInMinute;
     [SerializeField] private TMP_Text TextComponent;
@@ -16,20 +16,24 @@ public class Timer : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.Instance().ResetTimer += resetTimer;
-        EventManager.Instance().StartTimer += startTimer;
+        //EventManager.Instance().ResetTimer += resetTimer;
+        //EventManager.Instance().StartTimer += startTimer;
+        //EventManager.Instance().PauseTimer += stopTimer;
+        //EventManager.Instance().PauseTimer += pauseTimer;
     }
 
     private void OnDisable()
     {
-        EventManager.Instance().ResetTimer -= resetTimer;
-        EventManager.Instance().StartTimer -= startTimer;
+        //EventManager.Instance().ResetTimer -= resetTimer;
+        //EventManager.Instance().StartTimer -= startTimer;
+        //EventManager.Instance().PauseTimer -= stopTimer;
+        //EventManager.Instance().PauseTimer -= pauseTimer;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        startTimer();
+        //startTimer();
     }
 
     // Update is called once per frame

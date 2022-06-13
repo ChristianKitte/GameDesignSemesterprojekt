@@ -66,6 +66,36 @@ public class EventManager
     /// </summary>
     public event Action<CollisionObjektTyp, int> CollisionDetected;
 
+    /// <summary>
+    /// Signalisiert die Aufforderung das Spiel zu pausieren
+    /// </summary>
+    public event Action PauseGamePlayCallEvent;
+
+    /// <summary>
+    /// Signalisiert die Aufforderung das Spiel zu startet
+    /// </summary>
+    public event Action StartGamePlayCallEvent;
+
+    /// <summary>
+    /// Signalisiert die Aufforderung das Spiel fortzuführen
+    /// </summary>
+    public event Action ResumeGamePlayCallEvent;
+
+    /// <summary>
+    /// Signalisiert die Aufforderung zur Anzeige des Hauptmenüs
+    /// </summary>
+    public event Action MainMenueCallEvent;
+
+    /// <summary>
+    /// Signalisiert die Aufforderung zur Anzeige des Levelmenüs
+    /// </summary>
+    public event Action<LevelResultTyp> LevelMenueCallEvent;
+
+    /// <summary>
+    /// Startet ein neues Spiel
+    /// </summary>
+    public event Action StartNewGameEvent;
+
     #endregion
 
     #region TriggerCallFunctions
@@ -127,6 +157,55 @@ public class EventManager
     public void SendCollisionMessage(CollisionObjektTyp objektTyp, int objectValue)
     {
         CollisionDetected?.Invoke(objektTyp, objectValue);
+    }
+
+    /// <summary>
+    /// Wechselt zum Hauptmenü des Spiels
+    /// </summary>
+    public void ShowMainMenue()
+    {
+        MainMenueCallEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Wechselt zum Levelmenü des Spiels
+    /// </summary>
+    /// <param name="levelResult"></param>
+    public void ShowLevelMenue(LevelResultTyp levelResult)
+    {
+        LevelMenueCallEvent?.Invoke(levelResult);
+    }
+
+    /// <summary>
+    /// Stop den aktuellen Spiellauf
+    /// </summary>
+    public void StopGamePlay()
+    {
+        PauseGamePlayCallEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Startet den aktuellen Spiellauf (entfaltet die gleiche Wirkung wie ResumeGamePlay)
+    /// </summary>
+    public void StartGamePlay()
+    {
+        StartGamePlayCallEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Führt den aktuellen Spiellauf weiter
+    /// </summary>
+    public void ResumeGamePlay()
+    {
+        ResumeGamePlayCallEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Startet ein neues Spiel
+    /// </summary>
+    public void StartNewGame()
+    {
+        StartNewGameEvent?.Invoke();
     }
 
     #endregion
