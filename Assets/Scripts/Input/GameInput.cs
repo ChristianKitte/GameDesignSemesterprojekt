@@ -21,6 +21,10 @@ public class GameInput : MonoBehaviour
         _input.Game.Disable();
     }
 
+    /// <summary>
+    /// Handler für die ESC Taste
+    /// </summary>
+    /// <param name="ctx">Der Kontext des Events</param>
     private void QuitGame(InputAction.CallbackContext ctx)
     {
         if (GameState.Instance().GameIsPlaying && !GameState.Instance().GameIsPaused)

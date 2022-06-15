@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using DefaultNamespace.UI;
 using Game.Enumerations;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +16,12 @@ using TMPro;
 /// </summary>
 public class GameMaster : MonoBehaviour
 {
+    #region Dialog und UI
+
+    [SerializeField] private LevelDialogManager levelDialogManager;
+
+    #endregion
+
     #region Einstellungen und Variablen
 
     [SerializeField] private TMP_Text TextComponent;
@@ -195,6 +202,7 @@ public class GameMaster : MonoBehaviour
         EventManager.Instance().SecondTick += HandleSecondEvent;
         EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
         EventManager.Instance().StartNewGameEvent += startNewGame;
+        EventManager.Instance().StartNewLevelEvent += startGameLevel;
     }
 
     /// <summary>
@@ -207,6 +215,7 @@ public class GameMaster : MonoBehaviour
         EventManager.Instance().SecondTick -= HandleSecondEvent;
         EventManager.Instance().CollisionDetected -= HandleCollisionDetectedEvent;
         EventManager.Instance().StartNewGameEvent -= startNewGame;
+        EventManager.Instance().StartNewLevelEvent -= startGameLevel;
     }
 
     // Start is called before the first frame update
@@ -222,12 +231,12 @@ public class GameMaster : MonoBehaviour
     private void startNewGame()
     {
         EventManager.Instance().StartGamePlay();
-        
+
         gameState = GameState.Instance().reset();
 
-        gameState.GameIsPlaying=true;
+        gameState.GameIsPlaying = true;
         gameState.GameIsPaused = false;
-        
+
         gameState.currentLevel = 1;
         gameState.collectedBananaProviderBanana = 0;
         gameState.defaultSecondsToPlayPerLevel = TimePerRoundInSeconds;
@@ -238,15 +247,23 @@ public class GameMaster : MonoBehaviour
     }
 
     /// <summary>
-    /// Startet das aktuell gesetzte Level mit den aktuell geltenden Einstellungen
+    /// Konfiguriert und startet das aktuell gesetzte Level mit den aktuell geltenden Einstellungen
     /// </summary>
     private void startGameLevel()
     {
         // Hier fehlt noch die auf das aktuelle Level basierende Anpassung
 
+        // Bananen werden auf 0 gesetzt, sofern der Spieler weniger als 0 Bananen hat
+        if (gameState.collectedBananaProviderBanana < 0)
+        {
+            gameState.collectedBananaProviderBanana = 0;
+        }
+
+        // Spielzeit einstellen
         var secondsToPlay = gameState.defaultSecondsToPlayPerLevel;
         gameState.remainingSecondsToPlayLevel = secondsToPlay;
 
+        // PlayTime Bar setzen
         sliderManager.GetPlayTimeBar().SetBarMaximum(secondsToPlay);
         sliderManager.GetPlayTimeBar().SetCurrentValue(secondsToPlay);
 
@@ -263,51 +280,64 @@ public class GameMaster : MonoBehaviour
         GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
         // Spiel starten
+        GameState.Instance().GameIsPaused = false;
+
+        EventManager.Instance().ResumeGamePlay();
         EventManager.Instance().SendResetTimer(secondsToPlay);
         EventManager.Instance().SendStartTimer();
     }
 
+
     /// <summary>
-    /// Beendet das aktuell gesetzte Level. Beträgt der aktuelle Punktestand mehr als 0 Punkte, so
-    /// wird das nächste Level gespielt. Beträgt der aktuelle Punktestand gleich oder weniger als
-    /// 0 Punkte, so wird das vorherige Level aktiviert.
+    /// Beendet das aktuell gesetzte Level. Ist der LevelResultTyp Winner, so wird in das nächste Level
+    /// gewechselt. Ist der Typ Loser, so wird in das vorhergehende Level gewechselt. Ist in diesen Fall
+    /// das erste Level bereits erreicht, so verbleibt man in diesen Level.
     /// </summary>
-    private void finishCurrentGameLevel()
+    private void finishCurrentGameLevel(LevelResultTyp levelResultTyp)
     {
-        if (gameState.collectedBananaProviderBanana < 0) // Das Level wurde verloren
+        if (!GameState.Instance().GameLevelDlgIsShowing)
         {
-            runPreviousLevel();
-        }
-        else
-        {
-            runNextLevel();
+            EventManager.Instance().SendKillSignalForProvider();
+            EventManager.Instance().StopGamePlay();
+
+            GameState.Instance().GameIsPaused = true;
+            GameState.Instance().GameIsPlaying = false;
+
+            if (levelResultTyp == LevelResultTyp.Loser) // Das Level wurde verloren
+            {
+                if (gameState.currentLevel == 1)
+                {
+                    gameState.currentLevel = 1;
+                }
+                else
+                {
+                    gameState.currentLevel--;
+                }
+
+                levelDialogManager.Show(
+                    "Das war leider nichts! Lass es uns nochmal versuchen...",
+                    () => startGameLevel(),
+                    () => cancelAction(),
+                    "Bin dabei",
+                    "Nicht heute");
+            }
+            else if (levelResultTyp == LevelResultTyp.Winner)
+            {
+                gameState.currentLevel++;
+
+                levelDialogManager.Show(
+                    "Gut gemacht! Lass uns weiter machen...",
+                    () => startGameLevel(),
+                    () => cancelAction(),
+                    "Auf jeden Fall",
+                    "Nicht heute");
+            }
         }
     }
 
-    /// <summary>
-    /// Setzt den Levelzähler um eins hoch und startet das neue Level
-    /// </summary>
-    private void runNextLevel()
+    private void cancelAction()
     {
-        gameState.currentLevel++;
-        startGameLevel();
-    }
-
-    /// <summary>
-    /// Setzt den Levelzähler um eins herunter und startet das neue Level.
-    /// Ist das aktuelle Level das erste Level, so bleibt der Levelzähler unverändert.
-    /// </summary>
-    private void runPreviousLevel()
-    {
-        if (gameState.currentLevel == 1)
-        {
-            startGameLevel();
-        }
-        else
-        {
-            gameState.currentLevel--;
-            startGameLevel();
-        }
+        EventManager.Instance().ShowMainMenue();
     }
 
     #region Game Events
@@ -364,7 +394,14 @@ public class GameMaster : MonoBehaviour
 
                 break;
             case CollisionObjektTyp.MainTarget:
-                finishCurrentGameLevel();
+                if (sliderManager.GetBananaBar().GetCurrentValue() > 0)
+                {
+                    finishCurrentGameLevel(LevelResultTyp.Winner);
+                }
+                else
+                {
+                    finishCurrentGameLevel(LevelResultTyp.Loser);
+                }
 
                 break;
         }
@@ -396,7 +433,7 @@ public class GameMaster : MonoBehaviour
         // Spiel beenden oder verbleibende Spielzeit aktualisieren
         if (gameState.remainingSecondsToPlayLevel <= 0)
         {
-            finishCurrentGameLevel();
+            finishCurrentGameLevel(LevelResultTyp.Loser);
         }
         else
         {

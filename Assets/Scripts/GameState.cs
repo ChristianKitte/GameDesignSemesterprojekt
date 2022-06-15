@@ -50,6 +50,16 @@ public class GameState
     public bool GameIsPaused { get; set; }
 
     /// <summary>
+    /// True, wenn das Hauptmenü angezeigt wird, ansonsten false 
+    /// </summary>
+    public bool GameMainMenuIsShowing { get; set; }
+
+    /// <summary>
+    /// True, wenn der Leveldialog aktiv ist, ansonsten false
+    /// </summary>
+    public bool GameLevelDlgIsShowing { get; set; }
+
+    /// <summary>
     /// Die Zeit in Sekunden eines Levels
     /// </summary>
     public int defaultSecondsToPlayPerLevel { get; set; } = 0;

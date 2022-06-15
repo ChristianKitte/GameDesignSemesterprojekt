@@ -39,7 +39,7 @@ public class EventManager
     /// <summary>
     /// Wird ausgelöst, wenn die Spielzeit beendet ist
     /// </summary>
-    public event Action TimeOver;
+    //public event Action TimeOver;
 
     /// <summary>
     /// Wird ausgelöst, wenn der Timer gestoppt und auf 0 gesetzt wird
@@ -49,7 +49,7 @@ public class EventManager
     /// <summary>
     /// Wird ausgelöst, wenn der Timer mit aktuellen Stand angehalten wird
     /// </summary>
-    public event Action PauseTimer;
+    //public event Action PauseTimer;
 
     /// <summary>
     /// Wird ausgelöst, wenn der Timer beim alten Stand weiterläuft wird
@@ -96,6 +96,11 @@ public class EventManager
     /// </summary>
     public event Action StartNewGameEvent;
 
+    /// <summary>
+    /// Startet ein neues Level
+    /// </summary>
+    public event Action StartNewLevelEvent;
+
     #endregion
 
     #region TriggerCallFunctions
@@ -111,10 +116,10 @@ public class EventManager
     /// <summary>
     /// Löst das Event GameFinished aus
     /// </summary>
-    public void SendTimeOver()
+    /*public void SendTimeOver()
     {
         TimeOver?.Invoke();
-    }
+    }*/
 
     /// <summary>
     /// Löst das Ereignis ResetTimer aus
@@ -128,10 +133,10 @@ public class EventManager
     /// <summary>
     /// Löst das Ereignis PauseTimer aus
     /// </summary>   
-    public void SendPauseTimer()
+    /*public void SendPauseTimer()
     {
         PauseTimer?.Invoke();
-    }
+    }*/
 
     /// <summary>
     /// Löst das Ereignis StartTimer aus
@@ -170,7 +175,7 @@ public class EventManager
     /// <summary>
     /// Wechselt zum Levelmenü des Spiels
     /// </summary>
-    /// <param name="levelResult"></param>
+    /// <param name="levelResult">Das Ergebis des Levels</param>
     public void ShowLevelMenue(LevelResultTyp levelResult)
     {
         LevelMenueCallEvent?.Invoke(levelResult);
@@ -206,6 +211,14 @@ public class EventManager
     public void StartNewGame()
     {
         StartNewGameEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Startet ein neues Level
+    /// </summary>
+    public void StartNewLevel()
+    {
+        StartNewLevelEvent?.Invoke();
     }
 
     #endregion
