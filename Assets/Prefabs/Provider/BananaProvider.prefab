@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 2008846876845391994}
   - component: {fileID: 6897855420677922608}
   - component: {fileID: 6491581791359755008}
+  - component: {fileID: 1718016006218159059}
   m_Layer: 6
   m_Name: BananaProvider
   m_TagString: Untagged
@@ -261,6 +262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeOutFactor: 0.00001
+  scaleOut: 1
 --- !u!114 &2008846876845391994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +307,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 0.25
   randomStart: 1
+--- !u!114 &1718016006218159059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9f8cc2979d4208a8d4a0ea1e48b6a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: Banane geben Dir Kraft
 --- !u!1001 &3207535761456457782
 PrefabInstance:
   m_ObjectHideFlags: 0

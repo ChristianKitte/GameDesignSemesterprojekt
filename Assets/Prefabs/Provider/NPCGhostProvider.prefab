@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 6491581791359755008}
   - component: {fileID: 3370134487679314755}
   - component: {fileID: 9134423397176122482}
+  - component: {fileID: 6538900077858503718}
   m_Layer: 6
   m_Name: NPCGhostProvider
   m_TagString: Untagged
@@ -265,6 +266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1e437608242d54ab3f6b97cd535f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeOutFactor: 0.00001
+  scaleOut: 1
 --- !u!114 &6897855420677922608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +330,19 @@ MonoBehaviour:
   directionTarget: {fileID: 8627518677512863101}
   detectionRadius: 500
   detectionApproximate: 165.21
+--- !u!114 &6538900077858503718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9f8cc2979d4208a8d4a0ea1e48b6a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: Vorsicht vor den Geistern
 --- !u!1 &3504247185800690461
 GameObject:
   m_ObjectHideFlags: 0
