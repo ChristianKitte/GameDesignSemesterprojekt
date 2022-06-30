@@ -1,19 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using Game.Enumerations;
-using Unity.VisualScripting;
-using UnityEngine;
+// 
 
-// Zentrale Containerklasse um den Zustand des aktuellen Spiels zu halten
+/// <summary>
+/// Eine zentrale Containerklasse als Singleton um den Zustand des aktuellen Spiels zu halten 
+/// </summary>
 public class GameState
 {
     /// <summary>
     /// Einzige Instanz der Klasse GameState (Singleton)
     /// </summary>
     private static GameState _gameState;
-
 
     /// <summary>
     /// Liefert eine Instanz der Klasse GameState zurück
@@ -39,10 +34,16 @@ public class GameState
         return _gameState;
     }
 
-    /// <summary>
-    /// True, wenn das Spiel gestartet wurde, ansonsten false
-    /// </summary>
-    public bool GameIsPlaying { get; set; }
+    #region Sichtbarkeit Main und Level Menü
+
+    public bool MainMenuVisible { get; set; }
+    public bool LevelMenuVisible { get; set; }
+
+    #endregion
+
+    #region weg
+
+
 
     /// <summary>
     /// True, wenn die Spiel pausiert, ansonsten false
@@ -50,15 +51,19 @@ public class GameState
     public bool GameIsPaused { get; set; }
 
     /// <summary>
-    /// True, wenn das Hauptmenü angezeigt wird, ansonsten false 
-    /// </summary>
-    public bool GameMainMenuIsShowing { get; set; }
-
-    /// <summary>
     /// True, wenn der Leveldialog aktiv ist, ansonsten false
     /// </summary>
     public bool GameLevelDlgIsShowing { get; set; }
 
+    #endregion
+
+    #region Andere Einstellungen
+
+    /// <summary>
+    /// True, wenn das Spiel gestartet wurde, ansonsten false
+    /// </summary>
+    public bool GameIsPlaying { get; set; }
+    
     /// <summary>
     /// Die Zeit in Sekunden eines Levels
     /// </summary>
@@ -74,15 +79,9 @@ public class GameState
     /// </summary>
     public int currentLevel { get; set; } = 0;
 
-    /// <summary>
-    /// Restliche Sekunden für GhostProtection
-    /// </summary>
-    public int remainingSecondsGhostProtectionProvider { get; set; } = 0;
+    #endregion
 
-    /// <summary>
-    /// Restliche Sekunden für WallProtection
-    /// </summary>
-    public int remainingSecondsWallProtectionProvider { get; set; } = 0;
+    #region Punkte und Sekunden
 
     /// <summary>
     /// Alle bisher gesammelte Bananen des BananaProviders 
@@ -98,4 +97,6 @@ public class GameState
     /// Alle bisher gesammelten Sekunden des GoThroughProviders
     /// </summary>
     public int collectedWallProtectionProviderSeconds { get; set; } = 0;
+
+    #endregion
 }

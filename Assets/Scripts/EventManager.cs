@@ -37,19 +37,9 @@ public class EventManager
     public event Action SecondTick;
 
     /// <summary>
-    /// Wird ausgelöst, wenn die Spielzeit beendet ist
-    /// </summary>
-    //public event Action TimeOver;
-
-    /// <summary>
     /// Wird ausgelöst, wenn der Timer gestoppt und auf 0 gesetzt wird
     /// </summary>
     public event Action<int> ResetTimer;
-
-    /// <summary>
-    /// Wird ausgelöst, wenn der Timer mit aktuellen Stand angehalten wird
-    /// </summary>
-    //public event Action PauseTimer;
 
     /// <summary>
     /// Wird ausgelöst, wenn der Timer beim alten Stand weiterläuft wird
@@ -87,11 +77,6 @@ public class EventManager
     public event Action MainMenueCallEvent;
 
     /// <summary>
-    /// Signalisiert die Aufforderung zur Anzeige des Levelmenüs
-    /// </summary>
-    public event Action<LevelResultTyp> LevelMenueCallEvent;
-
-    /// <summary>
     /// Startet ein neues Spiel
     /// </summary>
     public event Action StartNewGameEvent;
@@ -114,14 +99,6 @@ public class EventManager
     }
 
     /// <summary>
-    /// Löst das Event GameFinished aus
-    /// </summary>
-    /*public void SendTimeOver()
-    {
-        TimeOver?.Invoke();
-    }*/
-
-    /// <summary>
     /// Löst das Ereignis ResetTimer aus
     /// </summary>
     /// <param name="newStartTimeInSeconds">Die Laufzeit, für die der Timer eingestellt wird</param>
@@ -129,14 +106,6 @@ public class EventManager
     {
         ResetTimer?.Invoke(newStartTimeInSeconds);
     }
-
-    /// <summary>
-    /// Löst das Ereignis PauseTimer aus
-    /// </summary>   
-    /*public void SendPauseTimer()
-    {
-        PauseTimer?.Invoke();
-    }*/
 
     /// <summary>
     /// Löst das Ereignis StartTimer aus
@@ -170,15 +139,6 @@ public class EventManager
     public void ShowMainMenue()
     {
         MainMenueCallEvent?.Invoke();
-    }
-
-    /// <summary>
-    /// Wechselt zum Levelmenü des Spiels
-    /// </summary>
-    /// <param name="levelResult">Das Ergebis des Levels</param>
-    public void ShowLevelMenue(LevelResultTyp levelResult)
-    {
-        LevelMenueCallEvent?.Invoke(levelResult);
     }
 
     /// <summary>
@@ -216,10 +176,10 @@ public class EventManager
     /// <summary>
     /// Startet ein neues Level
     /// </summary>
-    public void StartNewLevel()
+    /*public void StartNewLevel()
     {
         StartNewLevelEvent?.Invoke();
-    }
+    }*/
 
     #endregion
 }

@@ -38,6 +38,9 @@ public class GameMaster : MonoBehaviour
     [FormerlySerializedAs("ProviderFactory")] [Tooltip("Die zu verwendende ProviderFactory")] [SerializeField]
     private GameObject providerFactory;
 
+    [Tooltip("Das zur Anzeige des Levels zu nutzende TextMeshPro Element")] [SerializeField]
+    private TextMeshProUGUI levelString;
+
     private int playedSecondsSinceStart;
 
     private string currentTimeText;
@@ -190,6 +193,9 @@ public class GameMaster : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Hält global alle Stände des Spiels (Singleton)
+    /// </summary>
     private GameState gameState;
 
     /// <summary>
@@ -230,12 +236,12 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void startNewGame()
     {
-        EventManager.Instance().StartGamePlay();
+        //EventManager.Instance().StartGamePlay();
 
         gameState = GameState.Instance().reset();
 
-        gameState.GameIsPlaying = true;
-        gameState.GameIsPaused = false;
+        //gameState.GameIsPlaying = true;
+        //gameState.GameIsPaused = false;
 
         gameState.currentLevel = 1;
         gameState.collectedBananaProviderBanana = 0;
@@ -253,10 +259,16 @@ public class GameMaster : MonoBehaviour
     {
         // Hier fehlt noch die auf das aktuelle Level basierende Anpassung
 
+        if (levelString != null)
+        {
+            levelString.SetText($"Level {gameState.currentLevel}");
+        }
+
         // Bananen werden auf 0 gesetzt, sofern der Spieler weniger als 0 Bananen hat
         if (gameState.collectedBananaProviderBanana < 0)
         {
             gameState.collectedBananaProviderBanana = 0;
+            sliderManager.GetBananaBar().SetCurrentValue(0);
         }
 
         // Spielzeit einstellen
@@ -280,9 +292,9 @@ public class GameMaster : MonoBehaviour
         GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
         // Spiel starten
-        GameState.Instance().GameIsPaused = false;
+        //GameState.Instance().GameIsPaused = false;
 
-        EventManager.Instance().ResumeGamePlay();
+        //EventManager.Instance().ResumeGamePlay();
         EventManager.Instance().SendResetTimer(secondsToPlay);
         EventManager.Instance().SendStartTimer();
     }
@@ -353,11 +365,15 @@ public class GameMaster : MonoBehaviour
         switch (collisionType)
         {
             case CollisionObjektTyp.BananaProvider:
+                gameState.collectedBananaProviderBanana += value;
+
                 sliderManager.GetBananaBar().CountUp(value);
-                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
+                //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
 
                 break;
             case CollisionObjektTyp.WallProtectionProvider:
+                gameState.collectedWallProtectionProviderSeconds += value;
+
                 if (sliderManager.GetWallProtectionBar().GetCurrentValue() < value)
                 {
                     var newValue = value - sliderManager.GetWallProtectionBar().GetCurrentValue();
@@ -371,6 +387,8 @@ public class GameMaster : MonoBehaviour
 
                 break;
             case CollisionObjektTyp.GhostProtectionProvider:
+                gameState.collectedGhostProtectionProviderSeconds += value;
+
                 if (sliderManager.GetGhostProtectionBar().GetCurrentValue() < value)
                 {
                     var newValue = value - sliderManager.GetGhostProtectionBar().GetCurrentValue();
@@ -384,13 +402,23 @@ public class GameMaster : MonoBehaviour
 
                 break;
             case CollisionObjektTyp.MovingWall:
-                sliderManager.GetBananaBar().CountDown(value);
-                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
+                if (gameState.collectedWallProtectionProviderSeconds <= 0)
+                {
+                    gameState.collectedBananaProviderBanana -= value;
+
+                    sliderManager.GetBananaBar().CountDown(value);
+                    //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
+                }
 
                 break;
             case CollisionObjektTyp.Ghost:
-                sliderManager.GetBananaBar().CountDown(value);
-                gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
+                if (gameState.collectedGhostProtectionProviderSeconds <= 0)
+                {
+                    gameState.collectedBananaProviderBanana -= value;
+
+                    sliderManager.GetBananaBar().CountDown(value);
+                    //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
+                }
 
                 break;
             case CollisionObjektTyp.MainTarget:

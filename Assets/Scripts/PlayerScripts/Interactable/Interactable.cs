@@ -11,7 +11,10 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     [Tooltip("Der bei Annäherung anzuzeigende Text")] [SerializeField]
-    public string promptMessage;
+    public string promptMessage = "keine Nachricht";
+
+    [Tooltip("Die Farbe des anzuzeigenden Textes")] [SerializeField]
+    public Color promptColor = Color.white;
 
     // Wird vom Spieler aufgerufen
     public void BaseInteract()

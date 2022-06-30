@@ -23,6 +23,14 @@ namespace DefaultNamespace.UI
             canvas.enabled = false;
         }
 
+        /// <summary>
+        /// Zeigt den Dialog an
+        /// </summary>
+        /// <param name="infoText">Der anzuzeigende Text</param>
+        /// <param name="okAction">Die Funktion bei Betätigung der OK Taste</param>
+        /// <param name="cancelAction">Die Funktion bei Betätigung der Abbrechen Taste</param>
+        /// <param name="okLabel">Der Buttontext für die OK Taste</param>
+        /// <param name="cancelLabel">Der Buttontext für die Abbrechen Taste</param>
         public void Show(
             string infoText,
             Action okAction,
@@ -68,6 +76,9 @@ namespace DefaultNamespace.UI
         {
             SoundManager.Instance.PlayBackgroundMusic();
             GameState.Instance().GameLevelDlgIsShowing = false;
+
+            GameState.Instance().GameIsPaused = false;
+            GameState.Instance().GameIsPlaying = true;
 
             canvas.enabled = false;
             Destroy(gameObject);

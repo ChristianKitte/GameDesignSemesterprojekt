@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 6897855420677922608}
   - component: {fileID: 6491581791359755008}
   - component: {fileID: 5159093112888243440}
+  - component: {fileID: 2180397588790922523}
   m_Layer: 6
   m_Name: GhostProtectionProvider
   m_TagString: Untagged
@@ -308,7 +309,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.25
-  randomStart: 1
 --- !u!114 &5159093112888243440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +322,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   promptMessage: "K\xFCrbisse besch\xFCtzen Dich vor Geister"
+  promptColor: {r: 0.990566, g: 0.9672036, b: 0.9672036, a: 1}
+--- !u!114 &2180397588790922523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d745e820b9105c94ab0ce1baab4bb5d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frequenz: 1
+  amplitude: 2
 --- !u!1 &3504247185800690461
 GameObject:
   m_ObjectHideFlags: 0

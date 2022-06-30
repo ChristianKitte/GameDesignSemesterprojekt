@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Spielt einen Effekt bei der Kollision mit einem Objekt, das über den hinterlegten TAG verfügt
+/// </summary>
 public class PlayOnCollision : MonoBehaviour
 {
     [Tooltip("Der bei einer Kollision abzuspielende Clip")] [SerializeField]
@@ -13,6 +11,10 @@ public class PlayOnCollision : MonoBehaviour
     [Tooltip("Spielt nur einen Sound, wenn das kollidierende GameObject den angegeben Tag hat")] [SerializeField]
     private string TargetTag = "";
 
+    /// <summary>
+    /// Wird bei einer Kollision aufgerufen
+    /// </summary>
+    /// <param name="collision">Das Kontext Objekt</param>
     private void OnCollisionEnter(Collision collision)
     {
         if (TargetTag != "" && collision.gameObject.CompareTag(TargetTag))

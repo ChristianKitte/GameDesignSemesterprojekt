@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,54 +7,86 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private UIDocument HauptMenu;
     [SerializeField] private UIDocument EinstellungMenu;
     [SerializeField] private UIDocument TastaturMenu;
+    [SerializeField] private UIDocument SpielanleitungMenu;
 
     private VisualElement rootMainMenu;
     private VisualElement rootSettingsMenu;
     private VisualElement rootTutorialMenu;
+    private VisualElement rootTastaturMenu;
 
-    private Button startButton;
-    private Button tastaturButton;
-    private Button settingsButton;
-    private Button quitButton;
+    private Button SpielanleitungButton; //btnSpielanleitung
+    private Button tastaturButton; //btnTastatur
+    private Button settingsButton; //btnSettings
+    private Button startButton; //btnStart
 
-    private Toggle checkTon;
-    private Toggle checkGost;
-    private Button saveButton;
-    private Button returnFromSettingButton;
+    private Toggle checkTon; //checkAudio
+    private Toggle checkGost; //checkGhost
+    private Button saveEinstellungButton; //btnSave
+    private Button returnFromEinstellungButton; //btnReturn
 
-    private Button returnFromTutorialButton;
+    private Button returnFromTutorialButton; //btnReturn
+    private Button returnFromTastaturButton; //btnReturn
 
-    /// <summary>
-    /// Startroutine
-    /// </summary>
-    private void Start()
-    {
-    }
+
+    private GameState gameStateInstance;
 
     /// <summary>
-    /// Belegt die Menüelemente beim Start
+    /// Belegt die Menüelemente und Events beim Start
     /// </summary>
     private void OnEnable()
     {
         // Nicht in Start verschieben, da ansonsten die Referenzen nicht existieren!
 
+        // Variablen belegen
         rootMainMenu = HauptMenu.rootVisualElement;
         rootSettingsMenu = EinstellungMenu.rootVisualElement;
-        rootTutorialMenu = TastaturMenu.rootVisualElement;
+        rootTutorialMenu = SpielanleitungMenu.rootVisualElement;
+        rootTastaturMenu = TastaturMenu.rootVisualElement;
 
-        startButton = rootMainMenu.Q<Button>("btnStart");
+        SpielanleitungButton = rootMainMenu.Q<Button>("btnSpielanleitung");
         tastaturButton = rootMainMenu.Q<Button>("btnTastatur");
         settingsButton = rootMainMenu.Q<Button>("btnSettings");
-        quitButton = rootMainMenu.Q<Button>("btnQuit");
+        startButton = rootMainMenu.Q<Button>("btnStart");
 
         checkTon = rootSettingsMenu.Q<Toggle>("checkAudio");
         checkGost = rootSettingsMenu.Q<Toggle>("checkGhost");
-        saveButton = rootSettingsMenu.Q<Button>("btnSave");
-        returnFromSettingButton = rootSettingsMenu.Q<Button>("btnReturn");
+        saveEinstellungButton = rootSettingsMenu.Q<Button>("btnSave");
+        returnFromEinstellungButton = rootSettingsMenu.Q<Button>("btnReturn");
 
         returnFromTutorialButton = rootTutorialMenu.Q<Button>("btnReturn");
 
-        EventManager.Instance().MainMenueCallEvent += () => { showMain(); };
+        returnFromTastaturButton = rootTastaturMenu.Q<Button>("btnReturn");
+
+        // Click Event belegen
+        if (SpielanleitungButton != null)
+        {
+            if (SpielanleitungButton != null)
+                SpielanleitungButton.clickable.clicked += () =>
+                {
+                    Debug.Log("SpielanleitungButton wurde gedrückt");
+                    mainToTutorial();
+                };
+        }
+
+        if (tastaturButton != null)
+        {
+            if (tastaturButton != null)
+                tastaturButton.clickable.clicked += () =>
+                {
+                    Debug.Log("tastaturButton wurde gedrückt");
+                    mainToTastatur();
+                };
+        }
+
+        if (settingsButton != null)
+        {
+            if (settingsButton != null)
+                settingsButton.clickable.clicked += () =>
+                {
+                    Debug.Log("settingsButton wurde gedrückt");
+                    mainToSettings();
+                };
+        }
 
         if (startButton != null)
         {
@@ -65,43 +98,20 @@ public class PanelManager : MonoBehaviour
                 };
         }
 
-        if (tastaturButton != null)
+        checkTon?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
+
+        checkGost?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
+
+        if (saveEinstellungButton != null)
         {
-            tastaturButton.clickable.clicked += () =>
-            {
-                Debug.Log("TastaturButton wurde gedrückt");
-                mainToTastatur();
-            };
+            saveEinstellungButton.clickable.clicked += () => { Debug.Log("saveButton wurde gedrückt"); };
         }
 
-        if (settingsButton != null)
+        if (returnFromEinstellungButton != null)
         {
-            settingsButton.clickable.clicked += () =>
+            returnFromEinstellungButton.clickable.clicked += () =>
             {
-                Debug.Log("SettingsButton wurde gedrückt");
-                mainToSettings();
-            };
-        }
-
-        if (quitButton != null)
-        {
-            quitButton.clickable.clicked += () =>
-            {
-                Debug.Log("QuitButton wurde gedrückt");
-                quitApplication();
-            };
-        }
-
-        if (saveButton != null)
-        {
-            saveButton.clickable.clicked += () => { Debug.Log("saveButton wurde gedrückt"); };
-        }
-
-        if (returnFromSettingButton != null)
-        {
-            returnFromSettingButton.clickable.clicked += () =>
-            {
-                Debug.Log("ReturnFromSettingButton wurde gedrückt");
+                Debug.Log("returnFromEinstellungButton wurde gedrückt");
                 settingToMain();
             };
         }
@@ -115,37 +125,19 @@ public class PanelManager : MonoBehaviour
             };
         }
 
-        checkTon?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
+        if (returnFromTastaturButton != null)
+        {
+            returnFromTastaturButton.clickable.clicked += () =>
+            {
+                Debug.Log("returnFromTastaturButton wurde gedrückt");
+                tastaturToMain();
+            };
+        }
 
-        checkGost?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
-
+        // Restliche Variablen belegen und Main aufrufen
+        gameStateInstance = GameState.Instance();
+        EventManager.Instance().MainMenueCallEvent += () => { showMain(); };
         showMain();
-    }
-
-    private void returnToGame()
-    {
-        rootMainMenu.style.display = DisplayStyle.None;
-        rootSettingsMenu.style.display = DisplayStyle.None;
-        rootTutorialMenu.style.display = DisplayStyle.None;
-
-        SoundManager.Instance.PlayBackgroundMusic();
-
-        if (GameState.Instance().GameIsPlaying)
-        {
-            GameState.Instance().GameIsPaused = false;
-
-            // zurück zum Spiel
-            EventManager.Instance().ResumeGamePlay();
-        }
-        else
-        {
-            GameState.Instance().GameIsPlaying = true;
-            GameState.Instance().GameIsPaused = false;
-
-            // Neues Spiel starten
-            EventManager.Instance().StartGamePlay();
-            EventManager.Instance().StartNewGame();
-        }
     }
 
     /// <summary>
@@ -154,51 +146,120 @@ public class PanelManager : MonoBehaviour
     private void showMain()
     {
         EventManager.Instance().StopGamePlay();
+        gameStateInstance.MainMenuVisible = true;
 
-        GameState.Instance().GameIsPaused = true;
+        //GameState.Instance().GameIsPaused = true;
+
         SoundManager.Instance.PlayMenueMusic();
 
-        if (GameState.Instance().GameIsPlaying)
+        /*
+        if (GameState.Instance().GameIsPlaying || GameState.Instance().GameLevelDlgIsShowing)
         {
             startButton.text = "Zurück";
-        }
+        }*/
 
         rootMainMenu.style.display = DisplayStyle.Flex;
-        rootSettingsMenu.style.display = DisplayStyle.None;
         rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
-    private void mainToSettings()
+    private void mainToTutorial()
     {
         rootMainMenu.style.display = DisplayStyle.None;
-        rootSettingsMenu.style.display = DisplayStyle.Flex;
-        rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.Flex;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
     private void mainToTastatur()
     {
         rootMainMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.Flex;
         rootSettingsMenu.style.display = DisplayStyle.None;
-        rootTutorialMenu.style.display = DisplayStyle.Flex;
     }
 
-    private void settingToMain()
+    private void mainToSettings()
     {
-        rootSettingsMenu.style.display = DisplayStyle.None;
-        rootMainMenu.style.display = DisplayStyle.Flex;
+        rootMainMenu.style.display = DisplayStyle.None;
         rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.Flex;
     }
 
     private void tutorialToMain()
     {
-        rootSettingsMenu.style.display = DisplayStyle.None;
         rootMainMenu.style.display = DisplayStyle.Flex;
         rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
-    private void quitApplication()
+    private void tastaturToMain()
     {
-        Application.Quit();
-        //UnityEditor.EditorApplication.isPlaying = false;
+        rootMainMenu.style.display = DisplayStyle.Flex;
+        rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
+    }
+
+    private void settingToMain()
+    {
+        rootMainMenu.style.display = DisplayStyle.Flex;
+        rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
+    }
+
+    private void returnToGame()
+    {
+        rootMainMenu.style.display = DisplayStyle.None;
+        rootTutorialMenu.style.display = DisplayStyle.None;
+        rootTastaturMenu.style.display = DisplayStyle.None;
+        rootSettingsMenu.style.display = DisplayStyle.None;
+
+        SoundManager.Instance.PlayBackgroundMusic();
+
+        gameStateInstance.MainMenuVisible = false;
+
+        if (!gameStateInstance.GameIsPlaying)
+        {
+            // Der erste Start des Spiels. Dies wird vermerkt
+            gameStateInstance.GameIsPlaying = true;
+            // zurück zu Spiel
+            EventManager.Instance().ResumeGamePlay();
+            // Spiel starten
+            EventManager.Instance().StartGamePlay();
+        }
+        else
+        {
+            // nur zurück zum Spiel
+            EventManager.Instance().ResumeGamePlay();
+        }
+
+        /*
+        if (gameStateInstance.GameIsPlaying && gameStateInstance.GameIsPaused &&
+            !gameStateInstance.GameLevelDlgIsShowing)
+        {
+            gameStateInstance.GameIsPaused = false;
+
+            // zurück zum Spiel
+            EventManager.Instance().ResumeGamePlay();
+        }
+        else if (gameStateInstance.GameIsPlaying && !gameStateInstance.GameIsPaused &&
+                 !gameStateInstance.GameLevelDlgIsShowing)
+        {
+        }
+        else if (!gameStateInstance.GameIsPlaying && gameStateInstance.GameIsPaused &&
+                 !gameStateInstance.GameLevelDlgIsShowing)
+        {
+            gameStateInstance.GameIsPlaying = true;
+            gameStateInstance.GameIsPaused = false;
+
+            // Neues Spiel starten
+            EventManager.Instance().StartGamePlay();
+            EventManager.Instance().StartNewGame();
+        }*/
     }
 }

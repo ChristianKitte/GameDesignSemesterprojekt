@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Wenn das übergeordnete GameObjekt eine Kollision mit einem Objekt mit dem im "Tag" festgelegten
 /// TargetTag hat, wird eine Nachricht vom Typ CollisionDetected mit dem festgelegten Objekttyp
-/// versendet.
+/// versendet. 
 /// </summary>
 public class SendMessageOnCollision : MonoBehaviour
 {
@@ -22,12 +22,26 @@ public class SendMessageOnCollision : MonoBehaviour
     private int defaultValueOnMissingValue = 0;
 
     /// <summary>
+    /// Hält global alle Stände des Spiels (Singleton)
+    /// </summary>
+    private GameState gameState;
+
+    /// <summary>
+    /// Wird von Unity aufgerufen, wenn die Komponente enabled wird
+    /// </summary>
+    private void OnEnable()
+    {
+        gameState = GameState.Instance();
+    }
+
+    /// <summary>
     /// Wird ausgelöst, sofern eie Kollision stattfindet
     /// </summary>
     /// <param name="collision">Das Kontextobjekt zum Ereignis</param>
     private void OnCollisionEnter(Collision collision)
     {
         var currentValue = GetComponent<SetRandomValue>()?.CurrentValue;
+
         if (!currentValue.HasValue)
         {
             currentValue = defaultValueOnMissingValue;

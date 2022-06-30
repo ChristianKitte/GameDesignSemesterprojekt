@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 6491581791359755008}
   - component: {fileID: 6718594804926383540}
   - component: {fileID: 6750523493678005834}
+  - component: {fileID: 6706405056234155051}
   m_Layer: 6
   m_Name: TargetProvider
   m_TagString: Untagged
@@ -290,7 +291,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.25
-  randomStart: 1
 --- !u!114 &6718594804926383540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +321,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   promptMessage: Nimm die goldene Banane und gewinn das Level
+  promptColor: {r: 0.7169812, g: 0.59363747, b: 0.09411765, a: 1}
+--- !u!114 &6706405056234155051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d745e820b9105c94ab0ce1baab4bb5d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frequenz: 1
+  amplitude: 2
 --- !u!1001 &3207535761456457782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -416,7 +431,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.25
-  randomStart: 1
 --- !u!4 &3101236019840946141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 115447f99108cfe4cb9183952a148872, type: 3}

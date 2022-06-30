@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 6897855420677922608}
   - component: {fileID: 6491581791359755008}
   - component: {fileID: 9143609177710667166}
+  - component: {fileID: -9137196477392524468}
   m_Layer: 6
   m_Name: WallProtectionProvider
   m_TagString: Untagged
@@ -306,7 +307,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.25
-  randomStart: 1
 --- !u!114 &9143609177710667166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +320,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   promptMessage: "Bietet Schutz vor den W\xE4nden"
+  promptColor: {r: 0.9528302, g: 0.93934673, b: 0.93934673, a: 1}
+--- !u!114 &-9137196477392524468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066338822720895660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d745e820b9105c94ab0ce1baab4bb5d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frequenz: 1
+  amplitude: 2
 --- !u!1001 &3843958817198148949
 PrefabInstance:
   m_ObjectHideFlags: 0

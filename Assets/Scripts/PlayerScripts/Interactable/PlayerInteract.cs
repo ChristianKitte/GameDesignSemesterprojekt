@@ -39,8 +39,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
 
-                playerUI.UpdateText(interactable.promptMessage);
-
+                playerUI.UpdateText(interactable.promptMessage, interactable.promptColor);
 
                 if (inputManager.OnFoot.Interact.triggered)
                 {

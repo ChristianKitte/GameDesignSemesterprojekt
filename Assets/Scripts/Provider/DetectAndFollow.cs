@@ -1,45 +1,87 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Erkennt und Verfolgt das hinterlegte Objekt ab einer einstellbaren Annäherung des Objektes. Das hinterlegte
+/// GameObject wird nicht verfolgt, sofern die Schutzzeit größer 0 ist. Die Zeit wird in Update berücksichtigt.
+/// </summary>
 public class DetectAndFollow : MonoBehaviour
 {
-    [Tooltip("Der zu detektierende Layer")] [SerializeField]
-    private LayerMask layer;
+    [Tooltip("Der Verfolgte")] [SerializeField]
+    private GameObject player;
 
-    [Tooltip("Ein Stellvertreterobjekt am Ursprung der Detektion")] [SerializeField]
-    private GameObject directionOrigin;
-
-    [Tooltip("Ein Stellvertreterobjekt in Vorwärtsrichtung der Detektion")] [SerializeField]
-    private GameObject directionTarget;
+    [Tooltip("Die Geschwindigkeit, mit der sich das Objekt im Ruhezustand dreht")] [SerializeField]
+    private float rotationSpeed = 1f;
 
     [Tooltip("Der Radius, in dem ein detektierbares Objekt wahrgenommen werden soll")] [SerializeField]
     private float detectionRadius = 5.0f;
 
     [Tooltip("Die Schnelligkeit, mit der sich das Objekt dem detektierten Objekt annähert")] [SerializeField]
-    private float detectionApproximate = 10.0f;
+    private float detectionApproximate = 1f;
 
-    // Update is called once per frame
+    [Tooltip("Der minimale Abstand, mit der sich das Objekt dem detektierten Objekt annähert")] [SerializeField]
+    private float detectionStopApproximate = 1f;
+
+    /// <summary>
+    /// True, wenn ein Player gefunden und eingebunden werden konnte, ansonsten false
+    /// </summary>
+    private bool playerNotNull;
+
+    /// <summary>
+    /// Hält global alle Stände des Spiels (Singleton)
+    /// </summary>
+    private GameState gameState;
+
+    private Swing swingScript;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+        playerNotNull = player != null;
+
+        gameState = GameState.Instance();
+
+        swingScript = GetComponent<Swing>();
+    }
+
     void Update()
     {
-        directionOrigin.transform.Rotate(0, 1, 0);
-
-        Vector3 origin = directionOrigin.transform.position;
-        Vector3 direction = directionOrigin.transform.position - directionTarget.transform.position;
-
-        Debug.DrawRay(origin, direction * detectionRadius, Color.red, 1.0f);
-
-        if (Physics.Raycast(origin, direction, out RaycastHit lastHit, detectionRadius, layer))
+        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, 1*Time.deltaTime);
+        if (playerNotNull && gameState.collectedGhostProtectionProviderSeconds <= 0)
         {
-            // In Richtung des Ziels drehendw
-            transform.LookAt(lastHit.transform);
+            var distance = Vector3.Distance(transform.position, player.transform.position);
 
-            // Sich in Richtung des Ziels bewegen
-            var step = detectionApproximate * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, lastHit.transform.position, step);
+            if (distance <= detectionRadius)
+            {
+                // Für die Annäherung müssen wir Swing ausschalten
+                swingScript.enabled = false;
+
+                // attackieren, sobalt der Beobachtete in Reichweite ist 
+                transform.LookAt(player.transform);
+
+                if (distance > detectionStopApproximate)
+                {
+                    // annähern, solange die minimale Distanz nicht erreicht wurde
+                    transform.position = Vector3.MoveTowards(transform.position, player.transform.position,
+                        detectionApproximate * Time.deltaTime);
+                }
+                else
+                {
+                    // weggehen, solange die minimale Distanz erreicht wurde
+                    transform.position = Vector3.MoveTowards(transform.position, player.transform.position,
+                        detectionApproximate * Time.deltaTime * -1.0f);
+                }
+            }
+            else
+            {
+                // slow down
+                swingScript.enabled = true;
+                transform.Rotate(0, rotationSpeed, 0);
+            }
+        }
+        else
+        {
+            // slow down
+            transform.Rotate(0, rotationSpeed, 0);
         }
     }
 }

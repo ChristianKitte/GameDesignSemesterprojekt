@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Management.Instrumentation;
+using DefaultNamespace.UI;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameController : MonoBehaviour
@@ -26,6 +28,7 @@ public class GameController : MonoBehaviour
     /// <param name="ctx">Der Kontext des Events</param>
     private void QuitGame(InputAction.CallbackContext ctx)
     {
+        var Instance = GameState.Instance();
         if (GameState.Instance().GameIsPlaying && !GameState.Instance().GameIsPaused)
         {
             GameState.Instance().GameIsPaused = true;

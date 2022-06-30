@@ -10,11 +10,8 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class RotateYAxis : MonoBehaviour
 {
-    [Tooltip("Die Geschwindigkeit und Richtung der Rotation")] [SerializeField]
+    [Tooltip("Die Geschwindigkeit der Rotation")] [SerializeField]
     private float rotationSpeed = 1.0f;
-
-    [Tooltip("Eine zufällige Startzeit zwischen 0 und 2 Sekunde erzeugen")] [SerializeField]
-    private bool randomStart = true;
 
     private bool turn = false;
 
