@@ -15,16 +15,31 @@ namespace DefaultNamespace.UI
         [SerializeField] private TextMeshProUGUI cancelText;
         [SerializeField] private TextMeshProUGUI infoText;
 
+        /// <summary>
+        /// Hält eine Instanz von GameState (Singleton)
+        /// </summary>
+        private GameState gameState;
+
+        /// <summary>
+        /// Hält eine Instanz von EventManager (Singleton)
+        /// </summary>
+        private EventManager eventManager;
+
         private Action _okAction;
         private Action _cancelAction;
 
         private void Awake()
         {
+            gameState = GameState.Instance();
+            eventManager = EventManager.Instance();
+
             canvas.enabled = false;
         }
 
         /// <summary>
-        /// Zeigt den Dialog an
+        /// Zeigt den Dialog an. Das Schließen des Dialogs änder nichts an dem Status
+        /// LevelBreak. Er wird auf True gesetzt, wenn der Dialog aufgerufen wurde. Das
+        /// Rücksetzen kann nur durch den Start eines neuen Levels erfolgen.
         /// </summary>
         /// <param name="infoText">Der anzuzeigende Text</param>
         /// <param name="okAction">Die Funktion bei Betätigung der OK Taste</param>
@@ -39,7 +54,7 @@ namespace DefaultNamespace.UI
             string cancelLabel = "Abbrechen")
         {
             SoundManager.Instance.PlayMenueMusic();
-            GameState.Instance().GameLevelDlgIsShowing = true;
+            GameState.Instance().LevelMenuVisible = true;
 
             _okAction = okAction;
             _cancelAction = cancelAction;
@@ -52,7 +67,7 @@ namespace DefaultNamespace.UI
         }
 
         /// <summary>
-        /// Bestätigungsfunktion des Dialogs
+        /// Bestätigungsfunktion des Dialogs Der Zustand ist immer noch LevelBreak.
         /// </summary>
         public void Ok()
         {
@@ -61,7 +76,7 @@ namespace DefaultNamespace.UI
         }
 
         /// <summary>
-        /// Abbruchfunktion des Dialogs
+        /// Abbruchfunktion des Dialogs. Der Zustand ist immer noch LevelBreak.
         /// </summary>
         public void Cancel()
         {
@@ -70,17 +85,19 @@ namespace DefaultNamespace.UI
         }
 
         /// <summary>
-        /// Zerstören des Dialogs
+        /// Zerstören des Dialogs und aufräumen. Es wird das Event
+        /// CloseLevelMenuEvent geworfen. Das Zesrtören ändert nichts
+        /// an den Status für LevelBreak.
         /// </summary>
         public void Hide()
         {
             SoundManager.Instance.PlayBackgroundMusic();
-            GameState.Instance().GameLevelDlgIsShowing = false;
-
-            GameState.Instance().GameIsPaused = false;
-            GameState.Instance().GameIsPlaying = true;
 
             canvas.enabled = false;
+
+            gameState = null;
+            eventManager = null;
+
             Destroy(gameObject);
         }
     }

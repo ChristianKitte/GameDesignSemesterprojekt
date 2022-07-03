@@ -1,13 +1,24 @@
+using System;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// Händelt die Anzeige und Steuerung fes Hauptmenüs
+/// </summary>
 public class PanelManager : MonoBehaviour
 {
-    [SerializeField] private UIDocument HauptMenu;
-    [SerializeField] private UIDocument EinstellungMenu;
-    [SerializeField] private UIDocument TastaturMenu;
-    [SerializeField] private UIDocument SpielanleitungMenu;
+    [SerializeField] [Tooltip("Das UI Dokument, das das Hauptmenü enthält")]
+    private UIDocument HauptMenu;
+
+    [SerializeField] [Tooltip("Das UI Dokument, das das Einstellungsmenü enthält")]
+    private UIDocument EinstellungMenu;
+
+    [SerializeField] [Tooltip("Das UI Dokument, das das Tastaturmenü enthält")]
+    private UIDocument TastaturMenu;
+
+    [SerializeField] [Tooltip("Das UI Dokument, das die Spielanleitung enthält")]
+    private UIDocument SpielanleitungMenu;
 
     private VisualElement rootMainMenu;
     private VisualElement rootSettingsMenu;
@@ -20,15 +31,22 @@ public class PanelManager : MonoBehaviour
     private Button startButton; //btnStart
 
     private Toggle checkTon; //checkAudio
-    private Toggle checkGost; //checkGhost
+    private Toggle checkGeist; //checkGhost
     private Button saveEinstellungButton; //btnSave
     private Button returnFromEinstellungButton; //btnReturn
 
     private Button returnFromTutorialButton; //btnReturn
     private Button returnFromTastaturButton; //btnReturn
 
+    /// <summary>
+    /// Hält eine Instanz von GameState (Singleton)
+    /// </summary>
+    private GameState gameState;
 
-    private GameState gameStateInstance;
+    /// <summary>
+    /// Hält eine Instanz von EventManager (Singleton)
+    /// </summary>
+    private EventManager eventManager;
 
     /// <summary>
     /// Belegt die Menüelemente und Events beim Start
@@ -49,7 +67,7 @@ public class PanelManager : MonoBehaviour
         startButton = rootMainMenu.Q<Button>("btnStart");
 
         checkTon = rootSettingsMenu.Q<Toggle>("checkAudio");
-        checkGost = rootSettingsMenu.Q<Toggle>("checkGhost");
+        checkGeist = rootSettingsMenu.Q<Toggle>("checkGhost");
         saveEinstellungButton = rootSettingsMenu.Q<Button>("btnSave");
         returnFromEinstellungButton = rootSettingsMenu.Q<Button>("btnReturn");
 
@@ -100,7 +118,7 @@ public class PanelManager : MonoBehaviour
 
         checkTon?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
 
-        checkGost?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
+        checkGeist?.RegisterValueChangedCallback(e => { Debug.Log(e.newValue.ToString()); });
 
         if (saveEinstellungButton != null)
         {
@@ -135,9 +153,25 @@ public class PanelManager : MonoBehaviour
         }
 
         // Restliche Variablen belegen und Main aufrufen
-        gameStateInstance = GameState.Instance();
-        EventManager.Instance().MainMenueCallEvent += () => { showMain(); };
+        gameState = GameState.Instance();
+        eventManager = EventManager.Instance();
+
+        // Sicherstellen, dass das Hauptmenü von überall erreichbar ist
+        eventManager.MainMenueCallEvent += showMain;
+
         showMain();
+    }
+
+    /// <summary>
+    /// Löst verbundene EventListener
+    /// </summary>
+    private void OnDisable()
+    {
+        // Sicherstellen, dass das Hauptmenü nicht mehr von überall erreichbar ist
+        eventManager.MainMenueCallEvent -= showMain;
+
+        gameState = null;
+        eventManager = null;
     }
 
     /// <summary>
@@ -145,18 +179,10 @@ public class PanelManager : MonoBehaviour
     /// </summary>
     private void showMain()
     {
-        EventManager.Instance().StopGamePlay();
-        gameStateInstance.MainMenuVisible = true;
-
-        //GameState.Instance().GameIsPaused = true;
+        eventManager.CallPauseGameTime();
+        gameState.MainMenuVisible = true;
 
         SoundManager.Instance.PlayMenueMusic();
-
-        /*
-        if (GameState.Instance().GameIsPlaying || GameState.Instance().GameLevelDlgIsShowing)
-        {
-            startButton.text = "Zurück";
-        }*/
 
         rootMainMenu.style.display = DisplayStyle.Flex;
         rootTutorialMenu.style.display = DisplayStyle.None;
@@ -164,6 +190,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Verzweigung zur Spielanleitung
+    /// </summary>
     private void mainToTutorial()
     {
         rootMainMenu.style.display = DisplayStyle.None;
@@ -172,6 +201,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Verzweigung zur Tastaturbelegung
+    /// </summary>
     private void mainToTastatur()
     {
         rootMainMenu.style.display = DisplayStyle.None;
@@ -180,6 +212,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Verzweigung zu den Einstellungen
+    /// </summary>
     private void mainToSettings()
     {
         rootMainMenu.style.display = DisplayStyle.None;
@@ -188,6 +223,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.Flex;
     }
 
+    /// <summary>
+    /// Rücksprung zum Hauptmenü aus der Spielanleitung
+    /// </summary>
     private void tutorialToMain()
     {
         rootMainMenu.style.display = DisplayStyle.Flex;
@@ -196,6 +234,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Rücksprung zum Hauptmenü aus der Tastaturbelegung
+    /// </summary>
     private void tastaturToMain()
     {
         rootMainMenu.style.display = DisplayStyle.Flex;
@@ -204,6 +245,9 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Rücksprung zum Hauptmenü aus den Einstellungen
+    /// </summary>
     private void settingToMain()
     {
         rootMainMenu.style.display = DisplayStyle.Flex;
@@ -212,6 +256,10 @@ public class PanelManager : MonoBehaviour
         rootSettingsMenu.style.display = DisplayStyle.None;
     }
 
+    /// <summary>
+    /// Schließt das Menü und räumt auf. Es wird das Event
+    /// CloseMainMenuEvent geworfen.
+    /// </summary>
     private void returnToGame()
     {
         rootMainMenu.style.display = DisplayStyle.None;
@@ -221,45 +269,7 @@ public class PanelManager : MonoBehaviour
 
         SoundManager.Instance.PlayBackgroundMusic();
 
-        gameStateInstance.MainMenuVisible = false;
-
-        if (!gameStateInstance.GameIsPlaying)
-        {
-            // Der erste Start des Spiels. Dies wird vermerkt
-            gameStateInstance.GameIsPlaying = true;
-            // zurück zu Spiel
-            EventManager.Instance().ResumeGamePlay();
-            // Spiel starten
-            EventManager.Instance().StartGamePlay();
-        }
-        else
-        {
-            // nur zurück zum Spiel
-            EventManager.Instance().ResumeGamePlay();
-        }
-
-        /*
-        if (gameStateInstance.GameIsPlaying && gameStateInstance.GameIsPaused &&
-            !gameStateInstance.GameLevelDlgIsShowing)
-        {
-            gameStateInstance.GameIsPaused = false;
-
-            // zurück zum Spiel
-            EventManager.Instance().ResumeGamePlay();
-        }
-        else if (gameStateInstance.GameIsPlaying && !gameStateInstance.GameIsPaused &&
-                 !gameStateInstance.GameLevelDlgIsShowing)
-        {
-        }
-        else if (!gameStateInstance.GameIsPlaying && gameStateInstance.GameIsPaused &&
-                 !gameStateInstance.GameLevelDlgIsShowing)
-        {
-            gameStateInstance.GameIsPlaying = true;
-            gameStateInstance.GameIsPaused = false;
-
-            // Neues Spiel starten
-            EventManager.Instance().StartGamePlay();
-            EventManager.Instance().StartNewGame();
-        }*/
+        gameState.MainMenuVisible = false;
+        eventManager.CloseMainMenu();
     }
 }

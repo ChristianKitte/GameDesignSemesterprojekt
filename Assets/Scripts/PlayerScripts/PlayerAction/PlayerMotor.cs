@@ -35,7 +35,7 @@ public class PlayerMotor : MonoBehaviour
         moveDirection.z = input.y;
 
         controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
-        
+
         if (isGrounded && playerVelocity.y < 0)
         {
             // Es soll ein wenig unter 0 liegen

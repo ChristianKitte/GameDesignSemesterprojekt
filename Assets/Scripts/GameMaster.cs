@@ -194,9 +194,14 @@ public class GameMaster : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Hält global alle Stände des Spiels (Singleton)
+    /// Hält eine Instanz von GameState (Singleton)
     /// </summary>
     private GameState gameState;
+
+    /// <summary>
+    /// Hält eine Instanz von EventManager (Singleton)
+    /// </summary>
+    private EventManager eventManager;
 
     /// <summary>
     /// Wird von Unity aufgerufen, wenn die Komponente enabled wird
@@ -204,11 +209,11 @@ public class GameMaster : MonoBehaviour
     private void OnEnable()
     {
         gameState = GameState.Instance();
+        eventManager = EventManager.Instance();
 
+        eventManager.CloseMainMenuEvent += handleReturnFromMainMenu;
         EventManager.Instance().SecondTick += HandleSecondEvent;
         EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
-        EventManager.Instance().StartNewGameEvent += startNewGame;
-        EventManager.Instance().StartNewLevelEvent += startGameLevel;
     }
 
     /// <summary>
@@ -216,18 +221,53 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        gameState = null;
-
+        eventManager.CloseMainMenuEvent -= handleReturnFromMainMenu;
         EventManager.Instance().SecondTick -= HandleSecondEvent;
         EventManager.Instance().CollisionDetected -= HandleCollisionDetectedEvent;
-        EventManager.Instance().StartNewGameEvent -= startNewGame;
-        EventManager.Instance().StartNewLevelEvent -= startGameLevel;
+
+        gameState = null;
+        eventManager = null;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// Handelt das Ergebnis / die Rückkehr aus dem Hauptmenü. Es kann hierbei drei Optionen
+    /// geben:
+    /// 1)  Es wird ein ganz neues Spiel gestartet
+    /// 2)  Das Hauptmenü wurd im Spiel aufgerufen
+    /// 3)  Das Level wurde beendet und man hat sich gegen eine Fortführung entschieden (in diesen Fall
+    ///     erscheint das Hauptmenü)
+    /// </summary>
+    private void handleReturnFromMainMenu()
     {
-        //startNewGame();
+        if (gameState.GameIsPlaying)
+        {
+            // Das Spiel ist im Gange. 
+            if (gameState.LevelBreak)
+            {
+                // Es wurde gerade ein Level beendet und aus dem Leveldialog wurde das Hauptmenü aufgerufen.
+                // Der aktuelle Status ist nach wie vor LevelBreak. Bei der Fortführung muss mit dem aktuellen
+                // Level eine neue Spielrunde gestartet werden. Hierbei wird der Level auf False zurück gesetzt.
+
+                startGameLevel();
+            }
+            else
+            {
+                // Es war eine Unterbrechung in einer laufenden Spielrunde. Das Spiel muss somit
+                // nur fortgeführt werden
+
+                eventManager.CallResumeGameTime();
+            }
+        }
+        else
+        {
+            // Das Spiel beginnt neu. Entweder weil die Seite gerade betreten wurde, oder aber
+            // eine neues Spiel gestartet wurde (was jedoch aktuell nicht implementiert ist).
+            // Alle notwendigen Schritte hierfür müssen ausgeführt werden
+
+            eventManager.CallResumeGameTime();
+
+            startNewGame();
+        }
     }
 
     /// <summary>
@@ -236,12 +276,10 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void startNewGame()
     {
-        //EventManager.Instance().StartGamePlay();
-
         gameState = GameState.Instance().reset();
 
-        //gameState.GameIsPlaying = true;
-        //gameState.GameIsPaused = false;
+        gameState.GameIsPlaying = true;
+        gameState.LevelBreak = false;
 
         gameState.currentLevel = 1;
         gameState.collectedBananaProviderBanana = 0;
@@ -257,6 +295,11 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void startGameLevel()
     {
+        // nur hier erfolgt der Übergang zum Status LevelBreak = False
+        gameState.LevelBreak = false;
+        gameState.LevelMenuVisible = false;
+        eventManager.CallResumeGameTime();
+
         // Hier fehlt noch die auf das aktuelle Level basierende Anpassung
 
         if (levelString != null)
@@ -295,10 +338,9 @@ public class GameMaster : MonoBehaviour
         //GameState.Instance().GameIsPaused = false;
 
         //EventManager.Instance().ResumeGamePlay();
-        EventManager.Instance().SendResetTimer(secondsToPlay);
-        EventManager.Instance().SendStartTimer();
+        eventManager.SendResetTimer(secondsToPlay);
+        eventManager.SendStartTimer();
     }
-
 
     /// <summary>
     /// Beendet das aktuell gesetzte Level. Ist der LevelResultTyp Winner, so wird in das nächste Level
@@ -307,13 +349,9 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private void finishCurrentGameLevel(LevelResultTyp levelResultTyp)
     {
-        if (!GameState.Instance().GameLevelDlgIsShowing)
+        if (!gameState.LevelMenuVisible)
         {
-            EventManager.Instance().SendKillSignalForProvider();
-            EventManager.Instance().StopGamePlay();
-
-            GameState.Instance().GameIsPaused = true;
-            GameState.Instance().GameIsPlaying = false;
+            eventManager.SendKillSignalForProvider();
 
             if (levelResultTyp == LevelResultTyp.Loser) // Das Level wurde verloren
             {
@@ -347,9 +385,14 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handelt den Fall, dass im Level Dialog auf die Aufforderung, weiter zu spielen,
+    /// negativ reagiert wurde. In diesem Fall wird das Hauptmenü aufgerufen. Hierbei
+    /// bleibt der Status LevelBreak erhalten! 
+    /// </summary>
     private void cancelAction()
     {
-        EventManager.Instance().ShowMainMenue();
+        eventManager.ShowMainMenue();
     }
 
     #region Game Events
@@ -368,7 +411,6 @@ public class GameMaster : MonoBehaviour
                 gameState.collectedBananaProviderBanana += value;
 
                 sliderManager.GetBananaBar().CountUp(value);
-                //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
 
                 break;
             case CollisionObjektTyp.WallProtectionProvider:
@@ -407,7 +449,6 @@ public class GameMaster : MonoBehaviour
                     gameState.collectedBananaProviderBanana -= value;
 
                     sliderManager.GetBananaBar().CountDown(value);
-                    //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
                 }
 
                 break;
@@ -417,11 +458,16 @@ public class GameMaster : MonoBehaviour
                     gameState.collectedBananaProviderBanana -= value;
 
                     sliderManager.GetBananaBar().CountDown(value);
-                    //gameState.collectedBananaProviderBanana = sliderManager.GetBananaBar().GetCurrentValue();
                 }
 
                 break;
             case CollisionObjektTyp.MainTarget:
+                Debug.Log("Kollision Main Target");
+
+                // nur hier erfolgt der Übergang zum Status LevelBreak = True
+                gameState.LevelBreak = true;
+                eventManager.CallPauseGameTime();
+
                 if (sliderManager.GetBananaBar().GetCurrentValue() > 0)
                 {
                     finishCurrentGameLevel(LevelResultTyp.Winner);

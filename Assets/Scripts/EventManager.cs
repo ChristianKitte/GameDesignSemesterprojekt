@@ -59,32 +59,19 @@ public class EventManager
     /// <summary>
     /// Signalisiert die Aufforderung das Spiel zu pausieren
     /// </summary>
-    public event Action PauseGamePlayCallEvent;
-
-    /// <summary>
-    /// Signalisiert die Aufforderung das Spiel zu startet
-    /// </summary>
-    public event Action StartGamePlayCallEvent;
+    public event Action PauseGameTimeCallEvent;
 
     /// <summary>
     /// Signalisiert die Aufforderung das Spiel fortzuführen
     /// </summary>
-    public event Action ResumeGamePlayCallEvent;
+    public event Action ResumeGameTimeCallEvent;
 
     /// <summary>
     /// Signalisiert die Aufforderung zur Anzeige des Hauptmenüs
     /// </summary>
     public event Action MainMenueCallEvent;
 
-    /// <summary>
-    /// Startet ein neues Spiel
-    /// </summary>
-    public event Action StartNewGameEvent;
-
-    /// <summary>
-    /// Startet ein neues Level
-    /// </summary>
-    public event Action StartNewLevelEvent;
+    public event Action CloseMainMenuEvent;
 
     #endregion
 
@@ -144,42 +131,23 @@ public class EventManager
     /// <summary>
     /// Stop den aktuellen Spiellauf
     /// </summary>
-    public void StopGamePlay()
+    public void CallPauseGameTime()
     {
-        PauseGamePlayCallEvent?.Invoke();
-    }
-
-    /// <summary>
-    /// Startet den aktuellen Spiellauf (entfaltet die gleiche Wirkung wie ResumeGamePlay)
-    /// </summary>
-    public void StartGamePlay()
-    {
-        StartGamePlayCallEvent?.Invoke();
+        PauseGameTimeCallEvent?.Invoke();
     }
 
     /// <summary>
     /// Führt den aktuellen Spiellauf weiter
     /// </summary>
-    public void ResumeGamePlay()
+    public void CallResumeGameTime()
     {
-        ResumeGamePlayCallEvent?.Invoke();
+        ResumeGameTimeCallEvent?.Invoke();
     }
 
-    /// <summary>
-    /// Startet ein neues Spiel
-    /// </summary>
-    public void StartNewGame()
+    public void CloseMainMenu()
     {
-        StartNewGameEvent?.Invoke();
+        CloseMainMenuEvent?.Invoke();
     }
-
-    /// <summary>
-    /// Startet ein neues Level
-    /// </summary>
-    /*public void StartNewLevel()
-    {
-        StartNewLevelEvent?.Invoke();
-    }*/
 
     #endregion
 }

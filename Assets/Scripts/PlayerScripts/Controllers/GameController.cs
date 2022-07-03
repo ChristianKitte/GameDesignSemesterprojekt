@@ -1,16 +1,24 @@
-﻿using System.Management.Instrumentation;
-using DefaultNamespace.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Controller für die Deviceeingaben, die das Spiel, nicht den Spieler betreffen
+/// </summary>
 public class GameController : MonoBehaviour
 {
     private PlayerControls playerControls;
+
+    /// <summary>
+    /// Hält global alle Stände des Spiels (Singleton)
+    /// </summary>
+    private GameState gameState;
 
     private void OnEnable()
     {
         playerControls = new PlayerControls();
         playerControls.Game.Enable();
+
+        gameState = GameState.Instance();
 
         playerControls.Game.Quit.performed += QuitGame;
     }
@@ -23,15 +31,13 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Handler für die ESC Taste
+    /// Handler für die ESC und ENDE Taste
     /// </summary>
     /// <param name="ctx">Der Kontext des Events</param>
     private void QuitGame(InputAction.CallbackContext ctx)
     {
-        var Instance = GameState.Instance();
-        if (GameState.Instance().GameIsPlaying && !GameState.Instance().GameIsPaused)
+        if (!gameState.MainMenuVisible)
         {
-            GameState.Instance().GameIsPaused = true;
             EventManager.Instance().ShowMainMenue();
         }
     }

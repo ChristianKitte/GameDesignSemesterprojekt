@@ -18,16 +18,16 @@ public class GameClock : MonoBehaviour
     {
         EventManager.Instance().ResetTimer += ResetTimer;
         EventManager.Instance().StartTimer += StartTimer;
-        EventManager.Instance().PauseGamePlayCallEvent += PauseTimer;
-        EventManager.Instance().ResumeGamePlayCallEvent += ResumeTimer;
+        EventManager.Instance().PauseGameTimeCallEvent += PauseTimer;
+        EventManager.Instance().ResumeGameTimeCallEvent += ResumeTimer;
     }
 
     private void OnDisable()
     {
         EventManager.Instance().ResetTimer -= ResetTimer;
         EventManager.Instance().StartTimer -= StartTimer;
-        EventManager.Instance().PauseGamePlayCallEvent -= PauseTimer;
-        EventManager.Instance().ResumeGamePlayCallEvent -= ResumeTimer;
+        EventManager.Instance().PauseGameTimeCallEvent -= PauseTimer;
+        EventManager.Instance().ResumeGameTimeCallEvent -= ResumeTimer;
     }
 
     // Update is called once per frame

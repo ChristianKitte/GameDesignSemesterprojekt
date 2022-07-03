@@ -22,9 +22,9 @@ namespace DefaultNamespace
             {
                 Instance = this;
 
-                EventManager.Instance().PauseGamePlayCallEvent += PauseGamePlay;
+                EventManager.Instance().PauseGameTimeCallEvent += PauseGameTime;
                 //EventManager.Instance().StartGamePlayCallEvent += ResumeGamePlay;
-                EventManager.Instance().ResumeGamePlayCallEvent += ResumeGamePlay;
+                EventManager.Instance().ResumeGameTimeCallEvent += ResumeGameTime;
             }
             else
             {
@@ -35,17 +35,19 @@ namespace DefaultNamespace
         /// <summary>
         /// Stoppt den aktuellen Verlauf der Spielzeit durch Setzen der TimeScale
         /// </summary>
-        private void PauseGamePlay()
+        private void PauseGameTime()
         {
             Time.timeScale = 0;
+            Debug.Log("Pause GamePlay");
         }
 
         /// <summary>
         /// Führt den aktuellen Verlauf der Spielzeit durch Setzen der vorherigen TimeScale fort 
         /// </summary>
-        private void ResumeGamePlay()
+        private void ResumeGameTime()
         {
             Time.timeScale = 1;
+            Debug.Log("Resume GamePlay");
         }
     }
 }

@@ -1,5 +1,3 @@
-// 
-
 /// <summary>
 /// Eine zentrale Containerklasse als Singleton um den Zustand des aktuellen Spiels zu halten 
 /// </summary>
@@ -36,34 +34,30 @@ public class GameState
 
     #region Sichtbarkeit Main und Level Menü
 
+    /// <summary>
+    /// True, wenn das Hauptmenü sichtbar ist, ansonsten false
+    /// </summary>
     public bool MainMenuVisible { get; set; }
+
+    /// <summary>
+    /// True, wenn das LevelMenü sichtbar ist, ansonsten false
+    /// </summary>
     public bool LevelMenuVisible { get; set; }
-
-    #endregion
-
-    #region weg
-
-
-
-    /// <summary>
-    /// True, wenn die Spiel pausiert, ansonsten false
-    /// </summary>
-    public bool GameIsPaused { get; set; }
-
-    /// <summary>
-    /// True, wenn der Leveldialog aktiv ist, ansonsten false
-    /// </summary>
-    public bool GameLevelDlgIsShowing { get; set; }
 
     #endregion
 
     #region Andere Einstellungen
 
     /// <summary>
-    /// True, wenn das Spiel gestartet wurde, ansonsten false
+    /// True, wenn ein neues Spiel gestartet wurde, ansonsten false
     /// </summary>
     public bool GameIsPlaying { get; set; }
-    
+
+    /// <summary>
+    /// True, wenn ein Level beendet ist, ansonsten False
+    /// </summary>
+    public bool LevelBreak { get; set; }
+
     /// <summary>
     /// Die Zeit in Sekunden eines Levels
     /// </summary>
