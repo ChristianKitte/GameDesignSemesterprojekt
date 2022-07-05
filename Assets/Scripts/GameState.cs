@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// Eine zentrale Containerklasse als Singleton um den Zustand des aktuellen Spiels zu halten 
 /// </summary>
@@ -91,6 +93,8 @@ public class GameState
     /// Alle bisher gesammelten Sekunden des GoThroughProviders
     /// </summary>
     public int collectedWallProtectionProviderSeconds { get; set; } = 0;
+
+    public GameObject currentTarget { get; set; }
 
     #endregion
 }

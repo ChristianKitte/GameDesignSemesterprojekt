@@ -323,10 +323,12 @@ public class GameMaster : MonoBehaviour
         sliderManager.GetPlayTimeBar().SetCurrentValue(secondsToPlay);
 
         // WallProtection wird zurück gesetzt 
+        gameState.collectedWallProtectionProviderSeconds = 0;
         sliderManager.GetWallProtectionBar().SetBarMaximum(0);
         sliderManager.GetWallProtectionBar().SetCurrentValue(0);
 
         // GhostProtection wird zurück gesetzt
+        gameState.collectedGhostProtectionProviderSeconds = 0;
         sliderManager.GetGhostProtectionBar().SetBarMaximum(0);
         sliderManager.GetGhostProtectionBar().SetCurrentValue(0);
 

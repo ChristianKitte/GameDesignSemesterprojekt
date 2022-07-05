@@ -130,5 +130,7 @@ public class ProviderMaker : MonoBehaviour
 
         var newProvider = Instantiate(TargetProvider);
         newProvider.transform.position = new Vector3(randomXFloatNumber, 1.0f, randomZFloatNumber);
+
+        GameState.Instance().currentTarget = newProvider;
     }
 }
