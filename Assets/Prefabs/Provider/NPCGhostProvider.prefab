@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
+  afterClip: {fileID: 8300000, guid: 64cfbbb9bf0cdb8448318125bff757e1, type: 3}
   TargetTag: Player
 --- !u!114 &2752453111183526199
 MonoBehaviour:
@@ -298,7 +299,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2752453111183526204}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d745e820b9105c94ab0ce1baab4bb5d0, type: 3}
   m_Name: 

@@ -19,6 +19,7 @@ public class GameMaster : MonoBehaviour
     #region Dialog und UI
 
     [SerializeField] private LevelDialogManager levelDialogManager;
+    [SerializeField] private PointShowManager pointShowManager;
 
     #endregion
 
@@ -203,6 +204,8 @@ public class GameMaster : MonoBehaviour
     /// </summary>
     private EventManager eventManager;
 
+    private PointShowManager PointHightlightManager;
+
     /// <summary>
     /// Wird von Unity aufgerufen, wenn die Komponente enabled wird
     /// </summary>
@@ -214,6 +217,8 @@ public class GameMaster : MonoBehaviour
         eventManager.CloseMainMenuEvent += handleReturnFromMainMenu;
         EventManager.Instance().SecondTick += HandleSecondEvent;
         EventManager.Instance().CollisionDetected += HandleCollisionDetectedEvent;
+
+        PointHightlightManager = GetComponent<PointShowManager>();
     }
 
     /// <summary>
@@ -334,7 +339,7 @@ public class GameMaster : MonoBehaviour
 
         // Provider und Player auf das aktuelle Level anpassen - Aktuell wird currentLevel nicht ausgewertet
         providerFactory.GetComponent<ProviderMaker>()?.CreateProvider(getNewProviderDimension(currentLevel));
-        GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
+        //GetComponent<CharacterMaker>()?.SetPlayer(getNewPlayerDimension(currentLevel));
 
         // Spiel starten
         //GameState.Instance().GameIsPaused = false;
@@ -411,6 +416,7 @@ public class GameMaster : MonoBehaviour
         {
             case CollisionObjektTyp.BananaProvider:
                 gameState.collectedBananaProviderBanana += value;
+                PointHightlightManager.showPoints(value);
 
                 sliderManager.GetBananaBar().CountUp(value);
 
@@ -429,6 +435,9 @@ public class GameMaster : MonoBehaviour
                 gameState.collectedWallProtectionProviderSeconds =
                     sliderManager.GetWallProtectionBar().GetCurrentValue();
 
+                PointHightlightManager.showHint("Schutz vor den Wänden",
+                    gameState.collectedWallProtectionProviderSeconds);
+
                 break;
             case CollisionObjektTyp.GhostProtectionProvider:
                 gameState.collectedGhostProtectionProviderSeconds += value;
@@ -444,11 +453,15 @@ public class GameMaster : MonoBehaviour
                 gameState.collectedGhostProtectionProviderSeconds =
                     sliderManager.GetGhostProtectionBar().GetCurrentValue();
 
+                PointHightlightManager.showHint("Schutz vor den Geistern",
+                    gameState.collectedGhostProtectionProviderSeconds);
+
                 break;
             case CollisionObjektTyp.MovingWall:
                 if (gameState.collectedWallProtectionProviderSeconds <= 0)
                 {
                     gameState.collectedBananaProviderBanana -= value;
+                    PointHightlightManager.showPoints(value * -1);
 
                     sliderManager.GetBananaBar().CountDown(value);
                 }
@@ -458,6 +471,7 @@ public class GameMaster : MonoBehaviour
                 if (gameState.collectedGhostProtectionProviderSeconds <= 0)
                 {
                     gameState.collectedBananaProviderBanana -= value;
+                    PointHightlightManager.showPoints(value * -1);
 
                     sliderManager.GetBananaBar().CountDown(value);
                 }

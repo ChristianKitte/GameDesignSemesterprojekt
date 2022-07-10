@@ -23,7 +23,6 @@ namespace DefaultNamespace
                 Instance = this;
 
                 EventManager.Instance().PauseGameTimeCallEvent += PauseGameTime;
-                //EventManager.Instance().StartGamePlayCallEvent += ResumeGamePlay;
                 EventManager.Instance().ResumeGameTimeCallEvent += ResumeGameTime;
             }
             else
